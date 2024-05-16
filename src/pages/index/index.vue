@@ -21,6 +21,17 @@
         <uni-icons type="right" size="16" color="#333"></uni-icons>
       </view>
     </view>
+
+    <view class="select">
+      <common-title></common-title>
+      <view class="content">
+        <scroll-view scroll-x>
+          <view class="box"  v-for="item in 8">
+            <image src="../../common/images/preview_small.webp"></image>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -105,6 +116,30 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  }
+
+  .select{
+    padding-top: 50rpx;
+    .content{
+      width: 720rpx;
+      margin-left: 30rpx;
+      margin-top: 30rpx;
+      scroll-view{
+        white-space: nowrap; /* 不换行 */
+        .box{
+          width: 200rpx;
+          height: 430rpx;
+          display: inline-block;
+          margin-right: 15rpx;
+          image{
+            width: 100%;
+            height: 100%;
+            border-radius: 10rpx;
+          }
+        }
+        .box:last-child{margin-right: 30rpx}
+      }
     }
   }
 }
