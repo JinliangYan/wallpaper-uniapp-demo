@@ -23,7 +23,17 @@
     </view>
 
     <view class="select">
-      <common-title></common-title>
+      <common-title>
+        <template #name>每日推荐</template>
+        <template #custom>
+          <view class="date">
+            <uni-icons type="calendar" size="18" color="#28b389"></uni-icons>
+            <view class="text">
+              <uni-dateformat :date="Date.now()" format="dd日"></uni-dateformat>
+            </view>
+          </view>
+        </template>
+      </common-title>
       <view class="content">
         <scroll-view scroll-x>
           <view class="box"  v-for="item in 8">
@@ -31,6 +41,15 @@
           </view>
         </scroll-view>
       </view>
+    </view>
+
+    <view class="theme">
+      <common-title>
+        <template #name>专题精选</template>
+        <template #custom>
+          <navigator url="" class="more">More+</navigator>
+        </template>
+      </common-title>
     </view>
   </view>
 </template>
@@ -121,6 +140,14 @@
 
   .select{
     padding-top: 50rpx;
+    .date{
+      color: #28b389;
+      display: flex;
+      align-items: center;
+      .text{
+        margin-left: 5rpx;
+      }
+    }
     .content{
       width: 720rpx;
       margin-left: 30rpx;
@@ -140,6 +167,14 @@
         }
         .box:last-child{margin-right: 30rpx}
       }
+    }
+  }
+
+  .theme{
+    padding-top: 50rpx;
+    .more{
+      font-size: 32rpx;
+      color: #888;
     }
   }
 }
