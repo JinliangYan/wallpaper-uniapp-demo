@@ -4,9 +4,22 @@
       <swiper indicator-dots indicator-color="rgba(255,255,255,0.5)"
       indicator-active-color="#fff" autoplay circular>
         <swiper-item v-for="item in 3"><image src="../../common/images/banner1.jpg" mode="aspectFill"></image></swiper-item>
-        <swiper-item v-for="item in 3"><image src="../../common/images/banner2.jpg" mode="aspectFill"></image></swiper-item>
-        <swiper-item v-for="item in 3"><image src="../../common/images/banner3.jpg" mode="aspectFill"></image></swiper-item>
       </swiper>
+    </view>
+
+    <view class="notice">
+      <view class="left">
+        <uni-icons type="sound-filled" size="20" color="#28b389"></uni-icons>
+        <text class="text">公告</text>
+      </view>
+      <view class="center">
+        <swiper vertical autoplay interval="1500" duration="300" circular>
+          <swiper-item v-for="item in 4">文字内容</swiper-item>
+        </swiper>
+      </view>
+      <view class="right">
+        <uni-icons type="right" size="16" color="#333"></uni-icons>
+      </view>
     </view>
   </view>
 </template>
@@ -37,6 +50,61 @@
           border-radius: 10rpx;
         }
       }
+    }
+  }
+
+  .notice{
+    width: 690rpx;
+    height: 80rpx;
+    /*
+    设置元素的行高为 80rpx。
+    行高用于确定文本行的高度，并在垂直方向上对齐文本。
+    当行高等于元素高度时（如这里的 80rpx），文本将在元素内垂直居中。
+    这是因为行高大于字体高度时，会在文本的上下方各添加相同的空间，从而实现垂直居中。
+    */
+    line-height: 80rpx;
+    background: #f9f9f9;
+    /* 居中 */
+    /* 上下边距为 0（无上下边距） */
+    /* 左右边距为 auto */
+    /* auto 会根据元素的宽度和其包含块的宽度自动计算左右边距，使元素水平居中 */
+    margin: 0 auto;
+    border-radius: 80rpx; /* 胶囊: border-radius==height */
+    display: flex;  /* 将所有子元素显示为一行 */
+    .left{
+      width: 140rpx;
+      /* 子元素整体居中 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .text{
+        color: #28b389;
+        font-weight: 600;
+        font-size: 28rpx;
+      }
+    }
+    .center{
+      flex: 1; /* 设置中心子元素的弹性属性 */
+      swiper{
+        height: 100%;
+        &-item{
+          height: 100%;
+          font-size: 30rpx;
+          color: #666;
+          /* 内容显示不完整处理 */
+          /* 点点点 */
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+    .right{
+      width: 70rpx;
+      /* 子元素整体居中 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
