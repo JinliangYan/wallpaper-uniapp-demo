@@ -1,5 +1,5 @@
 <template>
-  <view class="userLayout">
+  <view class="userLayout pageBg">
     <view class="userInfo">
       <view class="avatar">
         <image src="../../static/images/xxmLogo.png" mode="aspectFill"></image>
@@ -96,6 +96,7 @@ function clickContact() {
         align-items: center;
         padding: 0 30rpx;
         height: 100rpx;
+        background-color: white;
         border-bottom: 1px solid #eee;
         position: relative;
         /* 最后一个不要有边框, 因为父级有边框, 会导致两个边框出现在底部 */
