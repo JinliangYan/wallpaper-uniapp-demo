@@ -12,9 +12,11 @@
 
 
 <style scoped lang="scss">
-.classify{
-  padding: 30rpx;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+.classifyLayout{
+  .classify{
+    padding: 30rpx;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 </style>

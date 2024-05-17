@@ -12,7 +12,7 @@
       <view class="list">
         <view class="row">
           <view class="left">
-            <uni-icons type="download-filled" size="20"></uni-icons>
+            <uni-icons type="contact" size="20"></uni-icons>
             <view class="text">联系客服</view>
           </view>
           <view class="right">
@@ -31,7 +31,7 @@
 
     <view class="section">
       <view class="list">
-        <view class="row" v-for="item in 2">
+        <navigator url="../classify-list/classify-list" class="row" v-for="item in 2">
           <view class="left">
             <uni-icons type="download-filled" size="20"></uni-icons>
             <view class="text">我的下载</view>
@@ -40,7 +40,7 @@
             <view class="text">33</view>
             <uni-icons type="right" size="15" color="#aaa"></uni-icons>
           </view>
-        </view>
+        </navigator>
       </view>
     </view>
   </view>

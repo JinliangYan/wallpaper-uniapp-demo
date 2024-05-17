@@ -27,6 +27,13 @@
         "navigationBarTitleText": "我的",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path": "pages/classify-list/classify-list",
+      "style": {
+        "navigationBarTitleText": "分类列表",
+        "enablePullDownRefresh": false
+      }
     }
   ],
   "globalStyle": {
@@ -42,12 +49,14 @@
         "pagePath": "pages/index/index",
         "iconPath": "static/images/tabBar/home.png",
         "selectedIconPath": "static/images/tabBar/home-h.png"
-      }, {
+      },
+      {
         "text": "分类",
         "pagePath": "pages/classify/classify",
         "iconPath": "static/images/tabBar/classify.png",
         "selectedIconPath": "static/images/tabBar/classify-h.png"
-      }, {
+      },
+      {
         "text": "我的",
         "pagePath": "pages/user/user",
         "iconPath": "static/images/tabBar/user.png",

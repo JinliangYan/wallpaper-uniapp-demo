@@ -1,12 +1,12 @@
 <template>
   <view class="themeItem">
-    <navigator url="" class="box" v-if="!isMore">
+    <navigator url="../classify-list/classify-list" class="box" v-if="!isMore">
       <image class="pic" src="../../common/images/classify1.jpg" mode="aspectFill"></image>
       <view class="mask">明星美女</view>
       <view class="tab">3天前更新</view>
     </navigator>
 
-    <navigator url="" class="box more" v-else>
+    <navigator url="../classify/classify" open-type="switchTab" class="box more" v-else>
       <image class="pic" src="../../common/images/more.jpg" mode="aspectFill"></image>
       <view class="mask">
         <uni-icons type="more-filled" size="34" color="white"></uni-icons>
@@ -29,6 +29,7 @@ defineProps({
 <style scoped lang="scss">
 .themeItem{
   .box{
+    margin: 5rpx;
     height: 340rpx;
     border-radius: 10rpx;
     overflow: hidden; /* 如果不加这个, 图片会把圆角覆盖 */
