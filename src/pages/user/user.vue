@@ -9,15 +9,21 @@
     </view>
     <view class="section">
       <view class="list">
-        <view class="row" v-for="item in 3">
+        <view class="row">
           <view class="left">
             <uni-icons type="download-filled" size="20" color="#28b389"></uni-icons>
-            <view class="text">我的下载</view>
+            <view class="text">联系客服</view>
           </view>
           <view class="right">
             <view class="text">33</view>
             <uni-icons type="right" size="15" color="#aaa"></uni-icons>
           </view>
+          <!-- #ifdef MP -->
+          <button open-type="contact"></button> <!--联系微信客服-->
+          <!-- #endif -->
+          <!-- #ifdef H5 -->
+          <button @click="clickContact"></button> <!--拨打电话-->
+          <!-- #endif -->
         </view>
       </view>
     </view>
@@ -41,6 +47,11 @@
 
 <script setup lang="ts">
 
+function clickContact() {
+  uni.makePhoneCall({
+    phoneNumber: '19070484090'
+  })
+}
 </script>
 
 
@@ -86,6 +97,7 @@
         padding: 0 30rpx;
         height: 100rpx;
         border-bottom: 1px solid #eee;
+        position: relative;
         /* 最后一个不要有边框, 因为父级有边框, 会导致两个边框出现在底部 */
         &:last-child{border-bottom: 0}
         .left{
@@ -106,6 +118,15 @@
             font-size: 28rpx;
             color: #aaa;
           }
+        }
+        button{
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          //background: rgba(1, 1, 1, 0); /* 这种透明效果会有黑边 */
+          opacity: 0; /* 透明 */
         }
       }
     }
