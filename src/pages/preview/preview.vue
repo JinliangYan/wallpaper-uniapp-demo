@@ -21,7 +21,7 @@
           <view class="text">信息</view>
         </view>
 
-        <view class="box">
+        <view class="box" @click="clickScore">
           <uni-icons type="star" size="28"></uni-icons>
           <view class="text">5分</view>
         </view>
@@ -63,8 +63,8 @@
             <view class="row">
               <view class="label">评分: </view>
               <view class="value roteBox">
-                <uni-rate readonly value="3.5" size="16"/>
-                <text class="score">3分</text>
+                <uni-rate readonly v-model="userScore" size="16"/>
+                <text class="score">{{ userScore }}分</text>
               </view>
             </view>
 
@@ -85,6 +85,28 @@
         </scroll-view>
       </view>
     </uni-popup>
+
+<!--    评分弹窗-->
+    <uni-popup ref="scorePopup" :is-mask-click="false">
+      <view class="scorePopup">
+        <view class="popHeader">
+          <view></view> <!--空盒子, 为了平均分布-->
+          <view class="title">壁纸评分</view>
+          <view class="close" @click="clickScoreClose">
+            <uni-icons type="closeempty" size="18"></uni-icons>
+          </view>
+        </view>
+
+        <view class="content">
+          <uni-rate v-model="userScore" allowHalf></uni-rate>
+          <text class="text">{{ userScore }}分</text>
+        </view>
+
+        <view class="footer">
+          <button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain> 确认评分 </button>
+        </view>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -92,7 +114,30 @@
 import {ref} from "vue";
 
 const maskState = ref(true)
+const userScore = ref(0) /* 壁纸评分 */
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
+const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
+
+/**
+ * 提交评分
+ */
+function submitScore() {
+  console.log("评分了")
+}
+
+/**
+ * 开启评分弹窗
+ */
+function clickScore() {
+  scorePopup.value.open()
+}
+
+/**
+ * 关闭评分弹窗
+ */
+function clickScoreClose() {
+  scorePopup.value.close()
+}
 
 /**
  * 关闭图片信息
@@ -201,23 +246,24 @@ function maskChange() {
     }
   }
 
+  .popHeader{
+    display: flex;
+    justify-content: space-between; /* 这里利用了空盒子来布局 */
+    align-items: center;
+    .title{
+      color: $text-font-color-2;
+      font-size: 26rpx;
+    }
+    .close{
+      padding: 6rpx 6rpx;
+    }
+  }
+
   .infoPopup{
     background: #fff;
     padding: 30rpx;
     border-radius: 30rpx 30rpx 0 0;
     overflow: hidden;
-    .popHeader{
-      display: flex;
-      justify-content: space-between; /* 这里利用了空盒子来布局 */
-      align-items: center;
-      .title{
-        color: $text-font-color-2;
-        font-size: 26rpx;
-      }
-      .close{
-        padding: 6rpx 6rpx;
-      }
-    }
 
     scroll-view{
       max-height: 60vh; /* 限制最大高度, 防止元素过多超出屏幕 */
@@ -270,6 +316,33 @@ function maskChange() {
           }
         }
       }
+    }
+  }
+
+  .scorePopup{
+    background: #fff;
+    padding: 30rpx;
+    width: 70vw;
+    border-radius: 30rpx;
+    .content{
+      padding: 30rpx 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .text{
+        color: #ffca3e;
+        font-size: 32rpx;
+        padding-left: 10rpx;
+        width: 80rpx;
+        line-height: 1em;
+        text-align: right;
+      }
+    }
+    .footer{
+      padding: 10rpx 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
