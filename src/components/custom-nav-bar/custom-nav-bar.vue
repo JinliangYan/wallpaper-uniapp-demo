@@ -1,8 +1,8 @@
 <template>
   <view class="layout">
     <view class="navbar">
-      <view class="statusBar" :style="{height: statusBarHeight + 'px'}"></view> <!--空白盒子, 设置为状态栏高度-->
-      <view class="titleBar" :style="{height: titleBarHeight + 'px'}">
+      <view class="statusBar" :style="{height: getStatusBarHeight() + 'px'}"></view> <!--空白盒子, 设置为状态栏高度-->
+      <view class="titleBar" :style="{height: getTitleBarHeight() + 'px'}">
         <view class="title">标题</view>
         <view class="search">
           <uni-icons class="icon" type="search" color="#888" size="18"></uni-icons>
@@ -12,21 +12,13 @@
     </view>
 
 <!--    制造填充区域: 防止定位属性导致原来界面被遮挡-->
-    <view class="fill" :style="{height : statusBarHeight + titleBarHeight + 'px'}"></view>
+    <view class="fill" :style="{height : getNavBarHeight() + 'px'}"></view>
   </view>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {getNavBarHeight, getStatusBarHeight, getTitleBarHeight} from "@/utils/system";
 
-const SYSTEM_INFO = uni.getSystemInfoSync()
-const statusBarHeight = ref(SYSTEM_INFO.statusBarHeight == undefined ? 0 : SYSTEM_INFO.statusBarHeight)
-
-const MENU_BUTTON = uni.getMenuButtonBoundingClientRect()
-const {top, height} = MENU_BUTTON
-/* 计算胶囊按钮整体高度 */
-const titleBarHeight = ref((top - statusBarHeight.value) * 2 + height)
-console.log(titleBarHeight.value)
 </script>
 
 
@@ -42,8 +34,6 @@ console.log(titleBarHeight.value)
     background:
         linear-gradient(to bottom, transparent, white 400rpx),
         linear-gradient(to right, #beecd8 20%, #f4e2d8);
-    .statusBar{
-    }
     .titleBar{
       display: flex;
       align-items: center;
