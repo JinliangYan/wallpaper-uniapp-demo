@@ -16,7 +16,7 @@
         <uni-dateformat :date="new Date()" format="MM月dd日"></uni-dateformat>
       </view>
       <view class="footer">
-        <view class="box">
+        <view class="box" @click="clickInfo">
           <uni-icons type="info" size="28"></uni-icons>
           <view class="text">信息</view>
         </view>
@@ -32,6 +32,59 @@
         </view>
       </view>
     </view>
+
+<!--    信息弹窗-->
+    <uni-popup ref="infoPopup" type="bottom">
+      <view class="infoPopup">
+        <view class="popHeader">
+          <view></view> <!--空盒子, 为了平均分布-->
+          <view class="title">壁纸信息</view>
+          <view class="close" @click="clickInfoClose">
+            <uni-icons type="closeempty" size="18"></uni-icons>
+          </view>
+        </view>
+        <scroll-view scroll-y>
+          <view class="content">
+            <view class="row">
+              <view class="label">壁纸ID: </view>
+              <text selectable class="value">test</text>
+            </view>
+
+            <view class="row">
+              <view class="label">分类: </view>
+              <text selectable class="value classify">test</text>
+            </view>
+
+            <view class="row">
+              <view class="label">发布者: </view>
+              <text selectable class="value">test</text>
+            </view>
+
+            <view class="row">
+              <view class="label">评分: </view>
+              <view class="value roteBox">
+                <uni-rate readonly value="3.5" size="16"/>
+                <text class="score">3分</text>
+              </view>
+            </view>
+
+            <view class="row">
+              <view class="label">摘要: </view>
+              <text selectable class="value">
+                摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分
+              </text>
+            </view>
+
+            <view class="row">
+              <view class="label">标签: </view>
+              <view class="value tabs">
+                <view class="tab" v-for="item in 3">标签{{item}}</view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -39,6 +92,25 @@
 import {ref} from "vue";
 
 const maskState = ref(true)
+const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
+
+/**
+ * 关闭图片信息
+ */
+function clickInfoClose() {
+  infoPopup.value.close()
+}
+
+/**
+ * 查看图片信息
+ */
+function clickInfo() {
+  infoPopup.value.open()
+}
+
+/**
+ * 开关遮罩状态
+ */
 function maskChange() {
   maskState.value = !maskState.value
 }
@@ -124,6 +196,78 @@ function maskChange() {
         .text{
           font-size: 26rpx;
           color: $text-font-color-2;
+        }
+      }
+    }
+  }
+
+  .infoPopup{
+    background: #fff;
+    padding: 30rpx;
+    border-radius: 30rpx 30rpx 0 0;
+    overflow: hidden;
+    .popHeader{
+      display: flex;
+      justify-content: space-between; /* 这里利用了空盒子来布局 */
+      align-items: center;
+      .title{
+        color: $text-font-color-2;
+        font-size: 26rpx;
+      }
+      .close{
+        padding: 6rpx 6rpx;
+      }
+    }
+
+    scroll-view{
+      max-height: 60vh; /* 限制最大高度, 防止元素过多超出屏幕 */
+      .content{
+        .row{
+          display: flex;
+          padding: 16rpx 0;
+          font-size: 32rpx;
+          line-height: 1.7em;
+          .label{
+            color: $text-font-color-3;
+            width: 140rpx;
+            text-align: right; /* 文本右对齐 */
+          }
+          .value{
+            /*
+            在 Flexbox 布局中，设置 flex: 1 的元素会尝试占据尽可能多的空间。
+            如果没有明确的宽度限制，元素的内容可能会导致其他元素被挤压。
+            这时，设置 width: 0 可以确保元素的宽度仅根据 flex 属性来计算，
+              而不是内容的固有宽度。
+            */
+            flex: 1;
+            width: 0; /* 防止内容过多, 挤压label */
+            padding-left: 10rpx;
+          }
+          .roteBox{
+            display: flex;
+            align-items: center;
+            .score{
+              font-size: 26rpx;
+              color: $text-font-color-2;
+              padding-left: 10rpx;
+            }
+          }
+          .tabs{
+            display: flex;
+            flex-wrap: wrap;
+            .tab{
+              border: 1px solid $brand-theme-color;
+              color: $brand-theme-color;
+              font-size: 22rpx;
+              padding: 10rpx 30rpx;
+              border-radius: 40rpx;
+              line-height: 1em;
+              margin: 0 10rpx 10rpx 0;
+            }
+          }
+          .classify{
+            color: $brand-theme-color;
+          }
         }
       }
     }
