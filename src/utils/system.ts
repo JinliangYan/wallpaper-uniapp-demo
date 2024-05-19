@@ -3,7 +3,7 @@
  */
 export function getStatusBarHeight() {
     const SYSTEM_INFO = uni.getSystemInfoSync()
-    return SYSTEM_INFO.statusBarHeight || 0
+    return SYSTEM_INFO.statusBarHeight || 15
 }
 
 /**

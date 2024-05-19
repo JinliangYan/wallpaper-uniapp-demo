@@ -3,7 +3,7 @@
     <view class="navbar">
       <view class="statusBar" :style="{height: getStatusBarHeight() + 'px'}"></view> <!--空白盒子, 设置为状态栏高度-->
       <view class="titleBar" :style="{height: getTitleBarHeight() + 'px'}">
-        <view class="title">标题</view>
+        <view class="title">{{ title }}</view>
         <view class="search">
           <uni-icons class="icon" type="search" color="#888" size="18"></uni-icons>
           <text class="text">搜索</text>
@@ -19,6 +19,12 @@
 <script setup lang="ts">
 import {getNavBarHeight, getStatusBarHeight, getTitleBarHeight} from "@/utils/system";
 
+defineProps({
+  title: {
+    type: String,
+    default: "壁纸"
+  }
+})
 </script>
 
 

@@ -1,6 +1,6 @@
 <template>
   <view class="homeLayout pageBg">
-    <custom-nav-bar></custom-nav-bar>
+    <custom-nav-bar title="推荐"></custom-nav-bar>
 
     <view class="banner">
       <swiper indicator-dots indicator-color="rgba(255,255,255,0.5)"
@@ -16,7 +16,11 @@
       </view>
       <view class="center">
         <swiper vertical autoplay interval="1500" duration="300" circular>
-          <swiper-item v-for="item in 4">文字内容</swiper-item>
+          <swiper-item v-for="item in 4">
+            <navigator url="../notice/detail">
+              文字内容
+            </navigator>
+          </swiper-item>
         </swiper>
       </view>
       <view class="right">
@@ -40,7 +44,9 @@
       <view class="content">
         <scroll-view scroll-x>
           <view class="box"  v-for="item in 8">
-            <image src="../../common/images/preview_small.webp"></image>
+            <navigator url="../preview/preview">
+              <image src="../../common/images/preview_small.webp"></image>
+            </navigator>
           </view>
         </scroll-view>
       </view>
@@ -179,10 +185,14 @@
           height: 430rpx;
           display: inline-block;
           margin-right: 15rpx;
-          image{
+          navigator{
             width: 100%;
             height: 100%;
-            border-radius: 10rpx;
+            image{
+              width: 100%;
+              height: 100%;
+              border-radius: 10rpx;
+            }
           }
         }
         .box:last-child{margin-right: 30rpx}

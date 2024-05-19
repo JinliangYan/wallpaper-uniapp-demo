@@ -7,7 +7,9 @@
     </swiper>
 
     <view class="mask" v-if="maskState">
-      <view class="goBack"></view>
+      <view class="goBack" @click="goBack" :style="{top: getStatusBarHeight() + 'px'}">
+        <uni-icons type="back" color="white" size="28"></uni-icons>
+      </view>
       <view class="count">3 / 9</view>
       <view class="time">
         <uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
@@ -112,6 +114,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
+import {getStatusBarHeight} from "@/utils/system";
 
 const maskState = ref(true)
 const userScore = ref(0) /* 壁纸评分 */
@@ -159,6 +162,13 @@ function clickInfo() {
 function maskChange() {
   maskState.value = !maskState.value
 }
+
+/**
+ * 返回上一页
+ */
+function goBack() {
+  uni.navigateBack()
+}
 </script>
 
 
@@ -188,7 +198,18 @@ function maskChange() {
       width: fit-content; /* 自适应宽度, 有多少内容就有多宽 */
     }
     .goBack{
-
+      width: 38px;
+      height: 38px;
+      background: rgba(0, 0, 0, .5);
+      left: 30rpx;
+      margin-left: 0;
+      border-radius: 100px;
+      top: 0;
+      backdrop-filter: blur(10px);
+      border: 1rpx solid rgba(255, 255, 255, .3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .count{
       top: 10vh;
