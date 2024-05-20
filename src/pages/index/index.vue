@@ -5,7 +5,7 @@
     <view class="banner">
       <swiper indicator-dots indicator-color="rgba(255,255,255,0.5)"
       indicator-active-color="#fff" autoplay circular>
-        <swiper-item v-for="item in 3"><image src="../../common/images/banner1.jpg" mode="aspectFill"></image></swiper-item>
+        <swiper-item v-for="item in bannerList" :key="item._id"><image :src="item.picurl" mode="aspectFill"></image></swiper-item>
       </swiper>
     </view>
 
@@ -16,9 +16,9 @@
       </view>
       <view class="center">
         <swiper vertical autoplay interval="1500" duration="300" circular>
-          <swiper-item v-for="item in 4">
+          <swiper-item v-for="item in noticeList" :key="item._id">
             <navigator url="../notice/detail">
-              文字内容
+              {{ item.title }}
             </navigator>
           </swiper-item>
         </swiper>
@@ -43,9 +43,9 @@
       </common-title>
       <view class="content">
         <scroll-view scroll-x>
-          <view class="box"  v-for="item in 8">
+          <view class="box"  v-for="item in randomList" :key="item._id">
             <navigator url="../preview/preview">
-              <image src="../../common/images/preview_small.webp"></image>
+              <image :src="item.smallPicurl"></image>
             </navigator>
           </view>
         </scroll-view>
@@ -69,6 +69,57 @@
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
+
+getBanner();
+getDayRandom()
+getNotice()
+
+const bannerList = ref([])
+const randomList = ref([])
+const noticeList = ref([])
+
+
+async function getBanner() {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/homeBanner",
+    header: {
+      "access-key" : "miku0206"
+    }
+  })
+  if (res.data.errCode === 0) {
+    bannerList.value = res.data.data
+  }
+}
+
+async function getDayRandom() {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/randomWall",
+    header: {
+      "access-key" : "miku0206"
+    }
+  })
+  if (res.data.errCode === 0) {
+    randomList.value = res.data.data
+  }
+}
+
+async function getNotice() {
+  let res = await uni.request({
+    url: "https://tea.qingnian8.com/api/bizhi/wallNewsList",
+    header: {
+      "access-key" : "miku0206",
+    },
+    data: {
+      select:true
+    }
+  })
+  if (res.data.errCode === 0) {
+    noticeList.value = res.data.data
+  }
+
+  console.log(res)
+}
 </script>
 
 <style lang="scss" scoped>
