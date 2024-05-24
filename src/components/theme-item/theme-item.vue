@@ -1,8 +1,8 @@
 <template>
   <view class="themeItem">
     <navigator url="../classify-list/classify-list" class="box" v-if="!isMore">
-      <image class="pic" src="../../common/images/classify1.jpg" mode="aspectFill"></image>
-      <view class="mask">明星美女</view>
+      <image class="pic" :src="item.picurl" mode="aspectFill"></image>
+      <view class="mask">{{ item.name }}</view>
       <view class="tab">3天前更新</view>
     </navigator>
 
@@ -21,6 +21,16 @@ defineProps({
   isMore:{
     type: Boolean,
     default: false
+  },
+  item:{
+    type: Object,
+    default() {
+      return {
+        name:"默认名称",
+        picurl:"../../common/images/classify1.jpg",
+        updateTime:Date.now() - 1000*60*60*5,
+      }
+    }
   }
 })
 </script>

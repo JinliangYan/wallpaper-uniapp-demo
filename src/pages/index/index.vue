@@ -61,7 +61,10 @@
       </common-title>
 
       <view class="content">
-        <theme-item v-for="item in 8"></theme-item>
+        <theme-item v-for="item in classifyList"
+                    :item="item"
+                    :key="item._id">
+        </theme-item>
         <theme-item is-more></theme-item>
       </view>
     </view>
@@ -70,16 +73,17 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {apiGetBanner, apiGetDayRandom, apiGetNotice} from "@/api/api";
+import {apiGetBanner, apiGetClassify, apiGetDayRandom, apiGetNotice} from "@/api/api";
 
 getBanner();
 getDayRandom()
 getNotice()
+getClassify()
 
 const bannerList = ref([])
 const randomList = ref([])
 const noticeList = ref([])
-
+const classifyList = ref([])
 
 async function getBanner() {
   let res = await apiGetBanner();
@@ -96,6 +100,13 @@ async function getDayRandom() {
 async function getNotice() {
   let res = await apiGetNotice({select:true})
   noticeList.value = res.data
+}
+
+async function getClassify() {
+  let res = await apiGetClassify({
+    select:true
+  })
+  classifyList.value = res.data
 }
 </script>
 
