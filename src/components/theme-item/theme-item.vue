@@ -1,6 +1,10 @@
+<!--suppress TypeScriptValidateTypes -->
 <template>
   <view class="themeItem">
-    <navigator url="../classify-list/classify-list" class="box" v-if="!isMore">
+    <navigator
+        :url="'../classify-list/classify-list?id='+item._id+'&name='+item.name"
+        class="box"
+        v-if="!isMore">
       <image class="pic" :src="item.picurl" mode="aspectFill"></image>
       <view class="mask">{{ item.name }}</view>
       <view class="tab">{{ timeDiffDisplay(item.updateTime) }}前更新</view>
