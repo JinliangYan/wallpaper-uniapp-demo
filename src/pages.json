@@ -35,7 +35,7 @@
       "path": "pages/classify-list/classify-list",
       "style": {
         "navigationBarTitleText": "分类列表",
-        "enablePullDownRefresh": false,
+        "enablePullDownRefresh": false
       }
     },
     {

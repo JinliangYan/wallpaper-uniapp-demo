@@ -3,7 +3,7 @@
     <navigator url="../classify-list/classify-list" class="box" v-if="!isMore">
       <image class="pic" :src="item.picurl" mode="aspectFill"></image>
       <view class="mask">{{ item.name }}</view>
-      <view class="tab">3天前更新</view>
+      <view class="tab">{{ timeDiffDisplay(item.updateTime) }}前更新</view>
     </navigator>
 
     <navigator url="../classify/classify" open-type="switchTab" class="box more" v-else>
@@ -17,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+import {timeDiffDisplay} from "@/utils/common";
+
 defineProps({
   isMore:{
     type: Boolean,
