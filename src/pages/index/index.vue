@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {apiGetBanner, apiGetDayRandom} from "@/api/api";
+import {apiGetBanner, apiGetDayRandom, apiGetNotice} from "@/api/api";
 
 getBanner();
 getDayRandom()
@@ -83,28 +83,19 @@ const noticeList = ref([])
 
 async function getBanner() {
   let res = await apiGetBanner();
-  bannerList.value = res.data.data
+  bannerList.value = res.data
 }
 
 async function getDayRandom() {
   let res = await apiGetDayRandom();
-  if (res.data.errCode === 0) {
-    randomList.value = res.data.data
+  if (res.errCode === 0) {
+    randomList.value = res.data
   }
 }
 
 async function getNotice() {
-  let res = await uni.request({
-    url: "https://tea.qingnian8.com/api/bizhi/wallNewsList",
-    header: {
-      "access-key" : "miku0206",
-    },
-    data: {
-      select:true
-    }
-  })
-
-  console.log(res)
+  let res = await apiGetNotice({select:true})
+  noticeList.value = res.data
 }
 </script>
 

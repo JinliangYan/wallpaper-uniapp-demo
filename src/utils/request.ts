@@ -6,11 +6,13 @@ export function request(config= {}
 ) {
     let {
         // @ts-ignore
-        url,
+        url="",
         // @ts-ignore
         method="GET",
         // @ts-ignore
-        header={}
+        header={},
+        // @ts-ignore
+        data={}
     } = config
     url = BASE_URL + url
     header['access-key'] = "miku0206"
@@ -20,10 +22,11 @@ export function request(config= {}
             url,
             method,
             header,
+            data,
             success:res=>{
                 // @ts-ignore
                 if (res.data.errCode === 0) {
-                    resolve(res)
+                    resolve(res.data)
                     // @ts-ignore
                 } else if (res.data.errCode === 400) {
                     uni.showModal({

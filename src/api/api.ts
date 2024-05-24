@@ -20,3 +20,7 @@ export function apiGetDayRandom() {
         }
     })
 }
+
+export function apiGetNotice(data={}) {
+    return request({url:"/wallNewsList", data})
+}
