@@ -1,15 +1,32 @@
 <template>
   <view class="classify-list">
     <view class="content">
-      <navigator url="../preview/preview" class="item" v-for="item in 10">
-        <image src="../../common/images/preview2.jpg" mode="aspectFill"></image>
+      <navigator
+          url="../preview/preview"
+          class="item"
+          v-for="item in classList"
+          :key="item._id"
+      >
+        <image :src="item.smallPicurl" mode="aspectFill"></image>
       </navigator>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
+import {apiGetClassList} from "@/api/api";
 
+const classList = ref([])
+
+getClassList({
+  classid: "6524ace7213929cbcee72e4d"
+})
+
+async function getClassList(data = {}) {
+  let res = await apiGetClassList(data)
+  classList.value = res.data
+}
 </script>
 
 
