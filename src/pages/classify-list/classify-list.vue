@@ -15,20 +15,28 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {onLoad} from "@dcloudio/uni-app";
+import {onLoad, onReachBottom} from "@dcloudio/uni-app";
 import {apiGetClassList} from "@/api/api";
 
-const queryParams: { classid, name } = {}
+const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?: number } = {}
+/* 用于阻止无效的网络请求 */
+const noData = ref(false)
 
 onLoad((e) => {
   let {id = null, name = null} = e
   queryParams.classid = id
   queryParams.name = name
-  console.log("onLoad", queryParams)
+  queryParams.pageNum = 1
   uni.setNavigationBarTitle({
     title: name
   })
   /* onLoad的生命周期晚于setup语法糖, 所以将参数获取放在此处*/
+  getClassList(queryParams)
+})
+
+onReachBottom(() => {
+  if (noData.value) return
+  queryParams.pageNum++;
   getClassList(queryParams)
 })
 
@@ -41,7 +49,12 @@ const classList = ref([])
 
 async function getClassList(data = {}) {
   let res = await apiGetClassList(data)
-  classList.value = res.data
+  // classList.value = [...classList.value, ...res.data]
+  classList.value = classList.value.concat(res.data)
+  /* 阻止无效的网络请求 */
+  if (queryParams.pageSize > res.data.length
+      || queryParams.pageSize == 0)
+    noData.value = true
 }
 </script>
 
