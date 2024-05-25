@@ -168,7 +168,9 @@ declare interface WallpaperDetailData extends WallPaperData {
     /** 标签数组 */
     tabs: string[];
     /** 评分 */
-    score: string;
+    score: number;
+    /** 用户评分 */
+    userScore?: number;
     /** 昵称 */
     nickname: string;
 }
@@ -228,7 +230,7 @@ declare interface UserRatingRequestData {
     /** 分类ID */
     classid: string;
     /** 壁纸ID */
-    wallld: string;
+    wallId: string;
     /** 用户评分 */
     userScore: string;
 }
@@ -282,7 +284,7 @@ declare interface WallPaperDownloadRequestData {
     /** 分类ID */
     classid: string;
     /** 壁纸ID */
-    wallld: string;
+    wallId: string;
 }
 
 /**

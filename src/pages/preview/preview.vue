@@ -1,7 +1,7 @@
 <template>
   <view class="preview">
     <!--suppress TypeScriptValidateTypes -->
-    <swiper :current="state.currentIndex" circular @change="swiperChange">
+    <swiper :current="currentItem.currentIndex" circular @change="swiperChange">
       <!--      减少网络消耗-->
       <swiper-item v-for="(item, index) in state.classList" :key="item._id">
         <image v-if="state.readImgs.has(index)" :src="item.picurl" mode="aspectFill" @click="maskChange"></image>
@@ -12,7 +12,7 @@
       <view :style="{top: getStatusBarHeight() + 'px'}" class="goBack" @click="goBack">
         <uni-icons color="white" size="28" type="back"></uni-icons>
       </view>
-      <view class="count">{{ state.currentIndex + 1 }} / {{ state.classList.length }}</view>
+      <view class="count">{{ currentItem.currentIndex + 1 }} / {{ state.classList.length }}</view>
       <view class="time">
         <uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
       </view>
@@ -26,8 +26,9 @@
         </view>
 
         <view class="box" @click="clickScore">
-          <uni-icons size="28" type="star"></uni-icons>
-          <view class="text">{{ currentInfo.score }}</view>
+          <uni-icons v-if="state.isScored" size="28" type="star-filled"></uni-icons>
+          <uni-icons v-else size="28" type="star"></uni-icons>
+          <view class="text">{{ currentItem.currentInfo.score }}分</view>
         </view>
 
         <view class="box">
@@ -51,40 +52,40 @@
           <view class="content">
             <view class="row">
               <view class="label">壁纸ID:</view>
-              <text class="value" selectable>{{ currentInfo._id }}</text>
+              <text class="value" selectable>{{ currentItem.currentId }}</text>
             </view>
 
-<!--
-            <view class="row">
-              <view class="label">分类:</view>
-              <text class="value classify" selectable>test</text>
-            </view>
--->
+            <!--
+                        <view class="row">
+                          <view class="label">分类:</view>
+                          <text class="value classify" selectable>test</text>
+                        </view>
+            -->
 
             <view class="row">
               <view class="label">发布者:</view>
-              <text class="value" selectable>{{ currentInfo.nickname }}</text>
+              <text class="value" selectable>{{ currentItem.currentInfo.nickname }}</text>
             </view>
 
             <view class="row">
               <view class="label">评分:</view>
               <view class="value roteBox">
-                <uni-rate readonly touchable :value="currentInfo.score" size="16"/>
-                <text class="score">{{ currentInfo.score }}分</text>
+                <uni-rate readonly touchable :value="currentItem.currentInfo.score" size="16"/>
+                <text class="score">{{ currentItem.currentInfo.score }}分</text>
               </view>
             </view>
 
             <view class="row">
               <view class="label">摘要:</view>
               <text class="value" selectable>
-                {{ currentInfo.description }}
+                {{ currentItem.currentInfo.description }}
               </text>
             </view>
 
             <view class="row">
               <view class="label">标签:</view>
               <view class="value tabs">
-                <view v-for="tab in currentInfo.tabs" class="tab">
+                <view v-for="tab in currentItem.currentInfo.tabs" class="tab">
                   {{ tab }}
                 </view>
               </view>
@@ -99,20 +100,23 @@
       <view class="scorePopup">
         <view class="popHeader">
           <view></view> <!--空盒子, 为了平均分布-->
-          <view class="title">壁纸评分</view>
+          <view class="title">{{ state.isScored ? "已经评分过了~" : "壁纸评分" }}</view>
           <view class="close" @click="clickScoreClose">
             <uni-icons size="18" type="closeempty"></uni-icons>
           </view>
         </view>
 
         <view class="content">
-          <uni-rate v-model="state.userScore" allowHalf></uni-rate>
-          <text class="text">{{ state.userScore }}分</text>
+          <uni-rate :readonly="state.isScored" v-model="userScore"
+                    allowHalf></uni-rate>
+          <text class="text">{{ userScore }}分</text>
         </view>
 
         <view class="footer">
           <!--suppress TypeScriptValidateTypes -->
-          <button :disabled="!state.userScore" plain size="mini" type="default" @click="submitScore"> 确认评分</button>
+          <button :disabled="!userScore || state.isScored" plain size="mini" type="default" @click="submitScore">
+            确认评分
+          </button>
         </view>
       </view>
     </uni-popup>
@@ -120,7 +124,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
 import {onLoad} from "@dcloudio/uni-app";
 import {apiRating} from "@/api/api";
@@ -132,19 +136,42 @@ const state = reactive({
   maskState: true,
   userScore: 0,
   classList: [],
-  currentId: null,
-  currentIndex: 0,
-  readImgs: new Set<number>()
+  readImgs: new Set<number>(),
+  isScored: false
 });
 
-const currentInfo = reactive<WallpaperDetailData>(<WallpaperDetailData>{})
+const currentItem = reactive({
+  currentInfo: {} as WallpaperDetailData,
+  currentId: null,
+  currentIndex: 0,
+})
 
-onLoad((e: { id }) => {
-  state.currentId = e.id
-  state.currentIndex = state.classList.findIndex(
-      (item) => item._id == state.currentId
+const userScore = computed({
+  get() {
+    /* 如果评分过, 取服务器上用户评分 */
+    if (currentItem.currentInfo.userScore != undefined) {
+      state.isScored = true
+      return currentItem.currentInfo.userScore
+    }
+    /* 如果没有评分过, 取用户当前选择的评分 */
+    state.isScored = false
+    return state.userScore
+  },
+  set(value: number) {
+    if (currentItem.currentInfo.userScore == undefined) {
+      state.userScore = value;
+    }
+  }
+});
+
+
+onLoad((onLoad: { id }) => {
+  currentItem.currentId = onLoad.id
+  currentItem.currentIndex = state.classList.findIndex(
+      (item) => item._id == currentItem.currentId
   )
-  Object.assign(currentInfo, state.classList[state.currentIndex])
+  // Object.assign(currentItem.currentInfo, state.classList[currentItem.currentIndex])
+  currentItem.currentInfo = state.classList[currentItem.currentIndex]
   preLoad()
 })
 
@@ -165,15 +192,14 @@ state.classList = storageClassList.map(item => {
  * 图片预加载, 使用户查看图片详情更丝滑
  */
 function preLoad() {
-  const previousIndex = state.currentIndex <= 0 ? state.classList.length - 1 : state.currentIndex - 1;
-  const nextIndex = state.currentIndex >= state.classList.length - 1 ? 0 : state.currentIndex + 1;
+  const previousIndex = currentItem.currentIndex <= 0 ? state.classList.length - 1 : currentItem.currentIndex - 1;
+  const nextIndex = currentItem.currentIndex >= state.classList.length - 1 ? 0 : currentItem.currentIndex + 1;
 
   // 使用 Set 来确保索引的唯一性
   state.readImgs.add(previousIndex);
-  state.readImgs.add(state.currentIndex);
+  state.readImgs.add(currentItem.currentIndex);
   state.readImgs.add(nextIndex);
 }
-
 
 /**
  * Swiper 滑动事件
@@ -181,24 +207,29 @@ function preLoad() {
  * @param e
  */
 function swiperChange(e) {
-  state.currentIndex = e.detail.current
-  Object.assign(currentInfo, state.classList[state.currentIndex])
+  currentItem.currentIndex = e.detail.current
+  currentItem.currentInfo = state.classList[currentItem.currentIndex]
   preLoad()
-  console.log(currentInfo)
 }
 
 /**
  * 提交评分
  */
 async function submitScore() {
-  // console.log("评分了")
-  let {classid, _id:wallId} = currentInfo;
+  uni.showLoading({
+    title: "加载中..."
+  })
+  let {classid, _id: wallId} = currentItem.currentInfo;
   let res = await apiRating({classid, wallId, userScore: state.userScore.toString()})
+  uni.hideLoading();
   if (res.errCode == 0) {
     uni.showToast({
       title: "评分成功",
       icon: "none",
     })
+    state.classList[currentItem.currentIndex].userScore = state.userScore
+    currentItem.currentInfo = state.classList[currentItem.currentIndex]
+    uni.setStorageSync("storageClassList", state.classList)
     clickScoreClose()
   }
 }
