@@ -1,31 +1,31 @@
 <template>
   <view class="classify-list">
-<!--    顶部加载框只在首次进入的时候显示, 即classList为空的时候-->
-<!--    如果没有数据也不显示加载框-->
-    <view class="loadingLayout"  v-if="!classList.length && !noData">
+    <!--    顶部加载框只在首次进入的时候显示, 即classList为空的时候-->
+    <!--    如果没有数据也不显示加载框-->
+    <view v-if="!classList.length && !noData" class="loadingLayout">
       <uni-load-more status="loading"></uni-load-more>
     </view>
     <view class="content">
       <!--suppress TypeScriptValidateTypes -->
       <navigator
-          :url="'../preview/preview?id=' + item._id"
-          class="item"
           v-for="item in classList"
           :key="item._id"
+          :url="'../preview/preview?id=' + item._id"
+          class="item"
       >
         <image :src="item.smallPicurl" mode="aspectFill"></image>
       </navigator>
     </view>
-<!--    底部加载框只在有内容的时候显示-->
-    <view class="loadingLayout" v-if="classList.length">
+    <!--    底部加载框只在有内容的时候显示-->
+    <view v-if="classList.length" class="loadingLayout">
       <uni-load-more :status="noData ? 'noMore' : 'loading'"></uni-load-more>
     </view>
-<!--    底部安全区域-->
+    <!--    底部安全区域-->
     <view class="safe-area-inset-bottom"></view>
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 import {onLoad, onReachBottom} from "@dcloudio/uni-app";
 import {apiGetClassList} from "@/api/api";
@@ -83,7 +83,7 @@ async function getClassList(data = {}) {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .classify-list {
   .content {
     padding: 5rpx;

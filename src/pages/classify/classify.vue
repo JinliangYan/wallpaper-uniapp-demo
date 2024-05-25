@@ -9,7 +9,7 @@
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 import {apiGetClassify} from "@/api/api";
 
@@ -26,9 +26,9 @@ async function getClassify() {
 </script>
 
 
-<style scoped lang="scss">
-.classifyLayout{
-  .classify{
+<style lang="scss" scoped>
+.classifyLayout {
+  .classify {
     padding: 30rpx;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

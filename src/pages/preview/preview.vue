@@ -1,15 +1,15 @@
 <template>
   <view class="preview">
     <!--suppress TypeScriptValidateTypes -->
-    <swiper circular :current="state.currentIndex" @change="swiperChange">
+    <swiper :current="state.currentIndex" circular @change="swiperChange">
       <swiper-item v-for="item in state.classList" :key="item._id">
-        <image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
+        <image :src="item.picurl" mode="aspectFill" @click="maskChange"></image>
       </swiper-item>
     </swiper>
 
-    <view class="mask" v-if="state.maskState">
-      <view class="goBack" @click="goBack" :style="{top: getStatusBarHeight() + 'px'}">
-        <uni-icons type="back" color="white" size="28"></uni-icons>
+    <view v-if="state.maskState" class="mask">
+      <view :style="{top: getStatusBarHeight() + 'px'}" class="goBack" @click="goBack">
+        <uni-icons color="white" size="28" type="back"></uni-icons>
       </view>
       <view class="count">{{ state.currentIndex + 1 }} / {{ state.classList.length }}</view>
       <view class="time">
@@ -20,17 +20,17 @@
       </view>
       <view class="footer">
         <view class="box" @click="clickInfo">
-          <uni-icons type="info" size="28"></uni-icons>
+          <uni-icons size="28" type="info"></uni-icons>
           <view class="text">信息</view>
         </view>
 
         <view class="box" @click="clickScore">
-          <uni-icons type="star" size="28"></uni-icons>
+          <uni-icons size="28" type="star"></uni-icons>
           <view class="text">5分</view>
         </view>
 
         <view class="box">
-          <uni-icons type="download" size="28"></uni-icons>
+          <uni-icons size="28" type="download"></uni-icons>
           <view class="text">下载</view>
         </view>
       </view>
@@ -43,37 +43,37 @@
           <view></view> <!--空盒子, 为了平均分布-->
           <view class="title">壁纸信息</view>
           <view class="close" @click="clickInfoClose">
-            <uni-icons type="closeempty" size="18"></uni-icons>
+            <uni-icons size="18" type="closeempty"></uni-icons>
           </view>
         </view>
         <scroll-view scroll-y>
           <view class="content">
             <view class="row">
               <view class="label">壁纸ID:</view>
-              <text selectable class="value">test</text>
+              <text class="value" selectable>test</text>
             </view>
 
             <view class="row">
               <view class="label">分类:</view>
-              <text selectable class="value classify">test</text>
+              <text class="value classify" selectable>test</text>
             </view>
 
             <view class="row">
               <view class="label">发布者:</view>
-              <text selectable class="value">test</text>
+              <text class="value" selectable>test</text>
             </view>
 
             <view class="row">
               <view class="label">评分:</view>
               <view class="value roteBox">
-                <uni-rate readonly v-model="state.userScore" size="16"/>
+                <uni-rate v-model="state.userScore" readonly size="16"/>
                 <text class="score">{{ state.userScore }}分</text>
               </view>
             </view>
 
             <view class="row">
               <view class="label">摘要:</view>
-              <text selectable class="value">
+              <text class="value" selectable>
                 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分
                 摘要文字内容填充部分 摘要文字内容填充部分
               </text>
@@ -82,7 +82,7 @@
             <view class="row">
               <view class="label">标签:</view>
               <view class="value tabs">
-                <view class="tab" v-for="item in 3">标签{{ item }}</view>
+                <view v-for="item in 3" class="tab">标签{{ item }}</view>
               </view>
             </view>
           </view>
@@ -97,7 +97,7 @@
           <view></view> <!--空盒子, 为了平均分布-->
           <view class="title">壁纸评分</view>
           <view class="close" @click="clickScoreClose">
-            <uni-icons type="closeempty" size="18"></uni-icons>
+            <uni-icons size="18" type="closeempty"></uni-icons>
           </view>
         </view>
 
@@ -108,15 +108,15 @@
 
         <view class="footer">
           <!--suppress TypeScriptValidateTypes -->
-          <button @click="submitScore" :disabled="!state.userScore" type="default" size="mini" plain> 确认评分</button>
+          <button :disabled="!state.userScore" plain size="mini" type="default" @click="submitScore"> 确认评分</button>
         </view>
       </view>
     </uni-popup>
   </view>
 </template>
 
-<script setup lang="ts">
-import {ref, reactive} from "vue";
+<script lang="ts" setup>
+import {reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
 import {onLoad} from "@dcloudio/uni-app";
 
@@ -131,13 +131,12 @@ const state = reactive({
   currentIndex: 0,
 });
 
-onLoad((e:{id}) => {
+onLoad((e: { id }) => {
   state.currentId = e.id
   state.currentIndex = state.classList.findIndex(
       (item) => item._id == state.currentId
   )
 })
-
 
 
 /* 用 `|| []` 返回一个空数组, 防止map报错 */
@@ -207,7 +206,7 @@ function goBack() {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .preview {
   width: 100%;
   height: 100vh;

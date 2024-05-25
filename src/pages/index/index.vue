@@ -3,19 +3,21 @@
     <custom-nav-bar title="推荐"></custom-nav-bar>
 
     <view class="banner">
-      <swiper indicator-dots indicator-color="rgba(255,255,255,0.5)"
-      indicator-active-color="#fff" autoplay circular>
-        <swiper-item v-for="item in bannerList" :key="item._id"><image :src="item.picurl" mode="aspectFill"></image></swiper-item>
+      <swiper autoplay circular
+              indicator-active-color="#fff" indicator-color="rgba(255,255,255,0.5)" indicator-dots>
+        <swiper-item v-for="item in bannerList" :key="item._id">
+          <image :src="item.picurl" mode="aspectFill"></image>
+        </swiper-item>
       </swiper>
     </view>
 
     <view class="notice">
       <view class="left">
-        <uni-icons type="sound-filled" size="20"></uni-icons>
+        <uni-icons size="20" type="sound-filled"></uni-icons>
         <text class="text">公告</text>
       </view>
       <view class="center">
-        <swiper vertical autoplay interval="1500" duration="300" circular>
+        <swiper autoplay circular duration="300" interval="1500" vertical>
           <swiper-item v-for="item in noticeList" :key="item._id">
             <navigator url="../notice/detail">
               {{ item.title }}
@@ -24,17 +26,17 @@
         </swiper>
       </view>
       <view class="right">
-        <uni-icons type="right" size="16" color="#333"></uni-icons>
+        <uni-icons color="#333" size="16" type="right"></uni-icons>
       </view>
     </view>
 
     <view class="select">
       <common-title>
-<!--        插槽用template指名-->
+        <!--        插槽用template指名-->
         <template #name>每日推荐</template>
         <template #custom>
           <view class="date">
-            <uni-icons type="calendar" size="18"></uni-icons>
+            <uni-icons size="18" type="calendar"></uni-icons>
             <view class="text">
               <uni-dateformat :date="Date.now()" format="dd日"></uni-dateformat>
             </view>
@@ -43,7 +45,7 @@
       </common-title>
       <view class="content">
         <scroll-view scroll-x>
-          <view class="box"  v-for="item in randomList" :key="item._id">
+          <view v-for="item in randomList" :key="item._id" class="box">
             <navigator url="../preview/preview">
               <image :src="item.smallPicurl"></image>
             </navigator>
@@ -56,14 +58,14 @@
       <common-title>
         <template #name>专题精选</template>
         <template #custom>
-          <navigator url="" class="more">More+</navigator>
+          <navigator class="more" url="">More+</navigator>
         </template>
       </common-title>
 
       <view class="content">
         <theme-item v-for="item in classifyList"
-                    :item="item"
-                    :key="item._id">
+                    :key="item._id"
+                    :item="item">
         </theme-item>
         <theme-item is-more></theme-item>
       </view>
@@ -71,7 +73,7 @@
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 import {apiGetBanner, apiGetClassify, apiGetDayRandom, apiGetNotice} from "@/api/api";
 
@@ -98,27 +100,28 @@ async function getDayRandom() {
 }
 
 async function getNotice() {
-  let res = await apiGetNotice({select:true})
+  let res = await apiGetNotice({select: true})
   noticeList.value = res.data
 }
 
 async function getClassify() {
   let res = await apiGetClassify({
-    select:true
+    select: true
   })
   classifyList.value = res.data
 }
 </script>
 
 <style lang="scss" scoped>
-.homeLayout{
-  .banner{
+.homeLayout {
+  .banner {
     width: 750rpx;
-    padding: 30rpx 0;   /*上下间距30rpx 左右间距0*/
-    swiper{
+    padding: 30rpx 0; /*上下间距30rpx 左右间距0*/
+    swiper {
       width: 750rpx;
       height: 340rpx;
-      &-item{
+
+      &-item {
         /* 宽度和高度都继承父级100% */
         width: 100%;
         height: 100%;
@@ -126,7 +129,8 @@ async function getClassify() {
         /* 需要配合全局样式的 box-sizing: border-box */
         /* 不然会将图片挤压出屏幕范围 */
         padding: 0 30rpx;
-        image{
+
+        image {
           width: 100%;
           height: 100%;
           /* 增加圆角 */
@@ -136,7 +140,7 @@ async function getClassify() {
     }
   }
 
-  .notice{
+  .notice {
     width: 690rpx;
     height: 80rpx;
     /*
@@ -153,33 +157,37 @@ async function getClassify() {
     /* auto 会根据元素的宽度和其包含块的宽度自动计算左右边距，使元素水平居中 */
     margin: 0 auto;
     border-radius: 80rpx; /* 胶囊: border-radius==height */
-    display: flex;  /* 将所有子元素显示为一行 */
-    .left{
+    display: flex; /* 将所有子元素显示为一行 */
+    .left {
       width: 140rpx;
       /* 子元素整体居中 */
       display: flex;
       align-items: center;
       justify-content: center;
-      .text{
+
+      .text {
         color: $brand-theme-color;
         font-weight: 600;
         font-size: 28rpx;
       }
+
       /* 小程序不能这样写 */
       //.uni-icons{
       //  /* 行内样式优先级大于这里的的样式, 要注明important */
       //  color: $brand-theme-color !important;
       //}
       /* 小程序正确写法 */
-      :deep(.uni-icons){
+      :deep(.uni-icons) {
         color: $brand-theme-color !important;
       }
     }
-    .center{
+
+    .center {
       flex: 1; /* 设置中心子元素的弹性属性 */
-      swiper{
+      swiper {
         height: 100%;
-        &-item{
+
+        &-item {
           height: 100%;
           font-size: 30rpx;
           color: #666;
@@ -191,7 +199,8 @@ async function getClassify() {
         }
       }
     }
-    .right{
+
+    .right {
       width: 70rpx;
       /* 子元素整体居中 */
       display: flex;
@@ -200,52 +209,64 @@ async function getClassify() {
     }
   }
 
-  .select{
+  .select {
     padding-top: 50rpx;
-    .date{
+
+    .date {
       color: $brand-theme-color;
       display: flex;
       align-items: center;
-      .text{
+
+      .text {
         margin-left: 5rpx;
       }
-      :deep(.uni-icons){
+
+      :deep(.uni-icons) {
         color: $brand-theme-color !important;
       }
     }
-    .content{
+
+    .content {
       width: 720rpx;
       margin-left: 30rpx;
       margin-top: 30rpx;
-      scroll-view{
+
+      scroll-view {
         white-space: nowrap; /* 不换行 */
-        .box{
+        .box {
           width: 200rpx;
           height: 430rpx;
           display: inline-block;
           margin-right: 15rpx;
-          navigator{
+
+          navigator {
             width: 100%;
             height: 100%;
-            image{
+
+            image {
               width: 100%;
               height: 100%;
               border-radius: 10rpx;
             }
           }
         }
-        .box:last-child{margin-right: 30rpx}
+
+        .box:last-child {
+          margin-right: 30rpx
+        }
       }
     }
   }
 
-  .theme{
+  .theme {
     padding: 50rpx 0;
-    .more{
+
+    .more {
       font-size: 32rpx;
       color: #888;
     }
-    .content{
+
+    .content {
       margin-top: 30rpx;
       padding: 0 30rpx;
       display: grid;

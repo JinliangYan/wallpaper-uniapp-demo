@@ -2,25 +2,25 @@
 <template>
   <view class="themeItem">
     <navigator
+        v-if="!isMore"
         :url="'../classify-list/classify-list?id='+item._id+'&name='+item.name"
-        class="box"
-        v-if="!isMore">
-      <image class="pic" :src="item.picurl" mode="aspectFill"></image>
+        class="box">
+      <image :src="item.picurl" class="pic" mode="aspectFill"></image>
       <view class="mask">{{ item.name }}</view>
       <view class="tab">{{ timeDiffDisplay(item.updateTime) }}前更新</view>
     </navigator>
 
-    <navigator url="../classify/classify" open-type="switchTab" class="box more" v-else>
-      <image class="pic" src="../../common/images/more.jpg" mode="aspectFill"></image>
+    <navigator v-else class="box more" open-type="switchTab" url="../classify/classify">
+      <image class="pic" mode="aspectFill" src="../../common/images/more.jpg"></image>
       <view class="mask">
-        <uni-icons type="more-filled" size="34" color="white"></uni-icons>
+        <uni-icons color="white" size="34" type="more-filled"></uni-icons>
         <view class="text">更多</view>
       </view>
     </navigator>
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {timeDiffDisplay} from "@/utils/common";
 
 /* 定义 props 的类型 */
@@ -42,9 +42,9 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 
-<style scoped lang="scss">
-.themeItem{
-  .box{
+<style lang="scss" scoped>
+.themeItem {
+  .box {
     margin: 5rpx;
     height: 340rpx;
     border-radius: 10rpx;
@@ -56,12 +56,14 @@ const props = withDefaults(defineProps<Props>(), {
     只是设置了一个基点，以便子元素可以相对于它进行定位。
     */
     position: relative;
-    .pic{
+
+    .pic {
       /* 图片有默认宽高, 这里要图片继承父级宽高 */
       width: 100%;
       height: 100%;
     }
-    .mask{
+
+    .mask {
       width: 100%;
       height: 70rpx;
       /*
@@ -82,7 +84,8 @@ const props = withDefaults(defineProps<Props>(), {
       font-weight: 600;
       font-size: 30rpx;
     }
-    .tab{
+
+    .tab {
       position: absolute;
       left: 0;
       top: 0;
@@ -97,14 +100,16 @@ const props = withDefaults(defineProps<Props>(), {
       //transform-origin: left;
     }
   }
+
   /* 继承了box的样式, 并在more上设置专属的样式 */
-  .box.more{
-    .mask{
+  .box.more {
+    .mask {
       width: 100%;
       height: 100%;
       flex-direction: column; /* 设置flex的方向为纵向 */
     }
-    .text{
+
+    .text {
       font-size: 28rpx;
     }
   }

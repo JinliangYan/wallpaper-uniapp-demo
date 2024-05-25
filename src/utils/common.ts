@@ -1,4 +1,4 @@
-export function timeDiffDisplay(inputTime:number) {
+export function timeDiffDisplay(inputTime: number) {
     const currentTime = new Date().getTime();
     const diff = currentTime - inputTime;
 

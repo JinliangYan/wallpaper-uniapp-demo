@@ -9,18 +9,19 @@
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 
-<style scoped lang="scss">
-.common-title{
+<style lang="scss" scoped>
+.common-title {
   display: flex;
   justify-content: space-between; /* 两端对齐 */
   align-items: center;
   padding: 0 30rpx;
-  .name{
+
+  .name {
     font-size: 40rpx;
   }
 }

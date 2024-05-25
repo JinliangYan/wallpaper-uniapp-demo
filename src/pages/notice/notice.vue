@@ -24,42 +24,49 @@
   </view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 
-<style scoped lang="scss">
-.noticeLayout{
+<style lang="scss" scoped>
+.noticeLayout {
   padding: 30rpx;
-  .title{
+
+  .title {
     font-size: 40rpx;
     color: #111;
     line-height: 1.6em;
     padding-bottom: 30rpx;
     display: flex;
-    .tag{
+
+    .tag {
       transform: scale(0.8);
       transform-origin: left center;
       flex-shrink: 0;
     }
-    .font{
+
+    .font {
       padding-left: 6rpx;
     }
   }
-  .info{
+
+  .info {
     display: flex;
     align-items: center;
     color: #999;
     font-size: 28rpx;
-    .item{
+
+    .item {
       padding-left: 20rpx;
     }
   }
-  .content{
+
+  .content {
     padding: 50rpx 0;
   }
-  .count{
+
+  .count {
     color: #999;
     font-size: 28rpx;
   }
