@@ -1,16 +1,17 @@
 <template>
   <view class="preview">
-    <swiper circular>
-      <swiper-item v-for="item in classList" :key="item._id">
+    <!--suppress TypeScriptValidateTypes -->
+    <swiper circular :current="state.currentIndex" @change="swiperChange">
+      <swiper-item v-for="item in state.classList" :key="item._id">
         <image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
       </swiper-item>
     </swiper>
 
-    <view class="mask" v-if="maskState">
+    <view class="mask" v-if="state.maskState">
       <view class="goBack" @click="goBack" :style="{top: getStatusBarHeight() + 'px'}">
         <uni-icons type="back" color="white" size="28"></uni-icons>
       </view>
-      <view class="count">3 / {{ classList.length }}</view>
+      <view class="count">{{ state.currentIndex + 1 }} / {{ state.classList.length }}</view>
       <view class="time">
         <uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
       </view>
@@ -65,8 +66,8 @@
             <view class="row">
               <view class="label">评分:</view>
               <view class="value roteBox">
-                <uni-rate readonly v-model="userScore" size="16"/>
-                <text class="score">{{ userScore }}分</text>
+                <uni-rate readonly v-model="state.userScore" size="16"/>
+                <text class="score">{{ state.userScore }}分</text>
               </view>
             </view>
 
@@ -101,13 +102,13 @@
         </view>
 
         <view class="content">
-          <uni-rate v-model="userScore" allowHalf></uni-rate>
-          <text class="text">{{ userScore }}分</text>
+          <uni-rate v-model="state.userScore" allowHalf></uni-rate>
+          <text class="text">{{ state.userScore }}分</text>
         </view>
 
         <view class="footer">
           <!--suppress TypeScriptValidateTypes -->
-          <button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain> 确认评分</button>
+          <button @click="submitScore" :disabled="!state.userScore" type="default" size="mini" plain> 确认评分</button>
         </view>
       </view>
     </uni-popup>
@@ -115,19 +116,34 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, reactive} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
+import {onLoad} from "@dcloudio/uni-app";
 
-const maskState = ref(true)
-const userScore = ref(0) /* 壁纸评分 */
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
-const classList = ref([])
+
+const state = reactive({
+  maskState: true,
+  userScore: 0,
+  classList: [],
+  currentId: null,
+  currentIndex: 0,
+});
+
+onLoad((e:{id}) => {
+  state.currentId = e.id
+  state.currentIndex = state.classList.findIndex(
+      (item) => item._id == state.currentId
+  )
+})
+
+
 
 /* 用 `|| []` 返回一个空数组, 防止map报错 */
 const storageClassList = uni.getStorageSync("storageClassList") || [];
 /* 拿出缓存数据, 在属性中增加picurl, 并赋值给classList */
-classList.value = storageClassList.map(item => {
+state.classList = storageClassList.map(item => {
   return {
     /* 展开item */
     ...item,
@@ -135,7 +151,10 @@ classList.value = storageClassList.map(item => {
     picurl: item.smallPicurl.replace("_small.webp", ".jpg"),
   }
 })
-console.log(classList)
+
+function swiperChange(e) {
+  state.currentIndex = e.detail.current
+}
 
 /**
  * 提交评分
@@ -176,7 +195,7 @@ function clickInfo() {
  * 开关遮罩状态
  */
 function maskChange() {
-  maskState.value = !maskState.value
+  state.maskState = !state.maskState
 }
 
 /**

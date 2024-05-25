@@ -6,8 +6,9 @@
       <uni-load-more status="loading"></uni-load-more>
     </view>
     <view class="content">
+      <!--suppress TypeScriptValidateTypes -->
       <navigator
-          url="../preview/preview"
+          :url="'../preview/preview?id=' + item._id"
           class="item"
           v-for="item in classList"
           :key="item._id"
