@@ -1,48 +1,50 @@
+const BASE_URL = "https://tea.qingnian8.com/api/bizhi";
 
-const  BASE_URL = "https://tea.qingnian8.com/api/bizhi";
 
-
-export function request(config= {}
+export function request(config: WallPaperRequest
 ) {
     let {
-        // @ts-ignore
-        url="",
-        // @ts-ignore
-        method="GET",
-        // @ts-ignore
-        header={},
-        // @ts-ignore
-        data={}
+        url,
+        method,
+        headers,
+        data
     } = config
+
+    /* 如果没有通过headers给定key, 则添加 */
+    if (config.headers == undefined) {
+        config = {
+            ...config,
+            headers: {
+                "access-key": "miku0206"
+            }
+        }
+    }
+
     url = BASE_URL + url
-    header['access-key'] = "miku0206"
-    header['token'] = "1828520027"
     return new Promise((resolve, reject) => {
         uni.request({
             url,
             method,
-            header,
+            header: headers,
             data,
-            success:res=>{
+            success: (res) => {
                 // @ts-ignore
-                if (res.data.errCode === 0) {
-                    resolve(res.data)
-                    // @ts-ignore
-                } else if (res.data.errCode === 400) {
+                let data: WallPaperResponse = res.data;
+                if (data.errCode === 0) {
+                    resolve(data)
+                } else if (data.errCode === 400) {
                     uni.showModal({
                         title: "Error",
-                        // @ts-ignore
-                        content: res.data.errMsg,
+                        content: data.errMsg,
                         showCancel: false
                     }).then()
-                    reject(res.data)
+                    reject(data)
                 } else {
                     uni.showToast({
-                        // @ts-ignore
-                        title: res.data.errMsg,
-                        icon:"none"
+                        title: data.errMsg,
+                        icon: "none"
                     }).then()
-                    reject(res.data)
+                    reject(data)
                 }
             },
             fail: err => {

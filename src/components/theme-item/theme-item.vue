@@ -23,22 +23,22 @@
 <script setup lang="ts">
 import {timeDiffDisplay} from "@/utils/common";
 
-defineProps({
-  isMore:{
-    type: Boolean,
-    default: false
-  },
-  item:{
-    type: Object,
-    default() {
-      return {
-        name:"默认名称",
-        picurl:"../../common/images/classify1.jpg",
-        updateTime:Date.now() - 1000*60*60*5,
-      }
-    }
+/* 定义 props 的类型 */
+interface Props {
+  isMore?: boolean;
+  item?: WallpaperCategoryData;
+}
+
+/* 设置默认值 */
+const props = withDefaults(defineProps<Props>(), {
+  isMore: false,
+  item: {
+    _id: "",
+    name: "默认名称",
+    picurl: "../../common/images/classify1.jpg",
+    updateTime: Date.now() - 1000 * 60 * 60 * 5,
   }
-})
+});
 </script>
 
 

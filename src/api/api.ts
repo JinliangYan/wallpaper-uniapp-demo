@@ -2,33 +2,30 @@ import {request} from "@/utils/request"
 
 export function apiGetBanner() {
     return request({
-        url: "/homeBanner",
-        method:"GET",
-        header: {
-
-        }
-    })
+        method: "GET", url: "/homeBanner"
+    } as HomeBannerRequest)
 }
-
 
 export function apiGetDayRandom() {
     return request({
-        url:"/randomWall",
-        method:"GET",
-        header: {
-
-        }
-    })
+        method: "GET", url: "/randomWall",
+    } as RandomWallpapersRequest)
 }
 
-export function apiGetNotice(data={}) {
-    return request({url:"/wallNewsList", data})
+export function apiGetNotice(data: NewsRequestData) {
+    return request({
+        url: "/wallNewsList", data
+    } as NewsRequest)
 }
 
-export function apiGetClassify(data={}) {
-    return request({url:"/classify",method:"GET", data})
+export function apiGetClassify(data: WallpaperCategoryRequestData) {
+    return request({
+        url: "/classify", method: "GET", data
+    } as WallpaperCategoryRequest)
 }
 
-export function apiGetClassList(data={}) {
-    return request({url:"/wallList",method:"GET", data})
+export function apiGetClassList(data: WallListRequestData) {
+    return request({
+        url: "/wallList", method: "GET", data
+    } as WallListRequest)
 }
