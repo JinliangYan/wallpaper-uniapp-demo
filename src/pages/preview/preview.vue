@@ -1,8 +1,8 @@
 <template>
   <view class="preview">
     <swiper circular>
-      <swiper-item v-for="item in 5">
-        <image @click="maskChange" src="../../common/images/preview1.jpg" mode="aspectFill"></image>
+      <swiper-item v-for="item in classList" :key="item._id">
+        <image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
       </swiper-item>
     </swiper>
 
@@ -10,7 +10,7 @@
       <view class="goBack" @click="goBack" :style="{top: getStatusBarHeight() + 'px'}">
         <uni-icons type="back" color="white" size="28"></uni-icons>
       </view>
-      <view class="count">3 / 9</view>
+      <view class="count">3 / {{ classList.length }}</view>
       <view class="time">
         <uni-dateformat :date="new Date()" format="hh:mm"></uni-dateformat>
       </view>
@@ -35,7 +35,7 @@
       </view>
     </view>
 
-<!--    信息弹窗-->
+    <!--    信息弹窗-->
     <uni-popup ref="infoPopup" type="bottom">
       <view class="infoPopup">
         <view class="popHeader">
@@ -48,22 +48,22 @@
         <scroll-view scroll-y>
           <view class="content">
             <view class="row">
-              <view class="label">壁纸ID: </view>
+              <view class="label">壁纸ID:</view>
               <text selectable class="value">test</text>
             </view>
 
             <view class="row">
-              <view class="label">分类: </view>
+              <view class="label">分类:</view>
               <text selectable class="value classify">test</text>
             </view>
 
             <view class="row">
-              <view class="label">发布者: </view>
+              <view class="label">发布者:</view>
               <text selectable class="value">test</text>
             </view>
 
             <view class="row">
-              <view class="label">评分: </view>
+              <view class="label">评分:</view>
               <view class="value roteBox">
                 <uni-rate readonly v-model="userScore" size="16"/>
                 <text class="score">{{ userScore }}分</text>
@@ -71,16 +71,17 @@
             </view>
 
             <view class="row">
-              <view class="label">摘要: </view>
+              <view class="label">摘要:</view>
               <text selectable class="value">
-                摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分
+                摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分
+                摘要文字内容填充部分 摘要文字内容填充部分
               </text>
             </view>
 
             <view class="row">
-              <view class="label">标签: </view>
+              <view class="label">标签:</view>
               <view class="value tabs">
-                <view class="tab" v-for="item in 3">标签{{item}}</view>
+                <view class="tab" v-for="item in 3">标签{{ item }}</view>
               </view>
             </view>
           </view>
@@ -88,7 +89,7 @@
       </view>
     </uni-popup>
 
-<!--    评分弹窗-->
+    <!--    评分弹窗-->
     <uni-popup ref="scorePopup" :is-mask-click="false">
       <view class="scorePopup">
         <view class="popHeader">
@@ -105,7 +106,8 @@
         </view>
 
         <view class="footer">
-          <button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain> 确认评分 </button>
+          <!--suppress TypeScriptValidateTypes -->
+          <button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain> 确认评分</button>
         </view>
       </view>
     </uni-popup>
@@ -120,6 +122,20 @@ const maskState = ref(true)
 const userScore = ref(0) /* 壁纸评分 */
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
+const classList = ref([])
+
+/* 用 `|| []` 返回一个空数组, 防止map报错 */
+const storageClassList = uni.getStorageSync("storageClassList") || [];
+/* 拿出缓存数据, 在属性中增加picurl, 并赋值给classList */
+classList.value = storageClassList.map(item => {
+  return {
+    /* 展开item */
+    ...item,
+    /* 追加picurl属性 (大图url) */
+    picurl: item.smallPicurl.replace("_small.webp", ".jpg"),
+  }
+})
+console.log(classList)
 
 /**
  * 提交评分
@@ -173,21 +189,24 @@ function goBack() {
 
 
 <style scoped lang="scss">
-.preview{
+.preview {
   width: 100%;
   height: 100vh;
   position: relative;
-  swiper{
+
+  swiper {
     width: 100%;
     height: 100%;
-    image{
+
+    image {
       width: 100%;
       height: 100%;
     }
   }
-  .mask{
+
+  .mask {
     /* 父级紧邻的view */
-    &>view{
+    & > view {
       position: absolute;
       /* 一个absolute定位布局居中的方式 */
       left: 0;
@@ -197,7 +216,8 @@ function goBack() {
       color: #fff;
       width: fit-content; /* 自适应宽度, 有多少内容就有多宽 */
     }
-    .goBack{
+
+    .goBack {
       width: 38px;
       height: 38px;
       background: rgba(0, 0, 0, .5);
@@ -211,7 +231,8 @@ function goBack() {
       align-items: center;
       justify-content: center;
     }
-    .count{
+
+    .count {
       top: 10vh;
       background: rgba(0, 0, 0, .3);
       font-size: 28rpx;
@@ -219,7 +240,8 @@ function goBack() {
       padding: 8rpx 28rpx;
       backdrop-filter: blur(10rpx);
     }
-    .time{
+
+    .time {
       font-size: 140rpx;
       top: calc(10vh + 80rpx);
       font-weight: 100;
@@ -235,12 +257,14 @@ function goBack() {
       */
       text-shadow: 0 4rpx rgba(0, 0, 0, .3);
     }
-    .date{
+
+    .date {
       font-size: 34rpx;
       top: calc(10vh + 230rpx);
       text-shadow: 0 2rpx rgba(0, 0, 0, .3);
     }
-    .footer{
+
+    .footer {
       background: rgba(255, 255, 255, .8);
       bottom: 10vh;
       height: 120rpx;
@@ -252,14 +276,16 @@ function goBack() {
       justify-content: space-around;
       box-shadow: 0 2rpx rgba(0, 0, 0, .1);
       backdrop-filter: blur(20rpx);
-      .box{
+
+      .box {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         /* 利用padding */
         padding: 2rpx 12rpx;
-        .text{
+
+        .text {
           font-size: 26rpx;
           color: $text-font-color-2;
         }
@@ -267,39 +293,43 @@ function goBack() {
     }
   }
 
-  .popHeader{
+  .popHeader {
     display: flex;
     justify-content: space-between; /* 这里利用了空盒子来布局 */
     align-items: center;
-    .title{
+
+    .title {
       color: $text-font-color-2;
       font-size: 26rpx;
     }
-    .close{
+
+    .close {
       padding: 6rpx 6rpx;
     }
   }
 
-  .infoPopup{
+  .infoPopup {
     background: #fff;
     padding: 30rpx;
     border-radius: 30rpx 30rpx 0 0;
     overflow: hidden;
 
-    scroll-view{
+    scroll-view {
       max-height: 60vh; /* 限制最大高度, 防止元素过多超出屏幕 */
-      .content{
-        .row{
+      .content {
+        .row {
           display: flex;
           padding: 16rpx 0;
           font-size: 32rpx;
           line-height: 1.7em;
-          .label{
+
+          .label {
             color: $text-font-color-3;
             width: 140rpx;
             text-align: right; /* 文本右对齐 */
           }
-          .value{
+
+          .value {
             /*
             在 Flexbox 布局中，设置 flex: 1 的元素会尝试占据尽可能多的空间。
             如果没有明确的宽度限制，元素的内容可能会导致其他元素被挤压。
@@ -310,19 +340,23 @@ function goBack() {
             width: 0; /* 防止内容过多, 挤压label */
             padding-left: 10rpx;
           }
-          .roteBox{
+
+          .roteBox {
             display: flex;
             align-items: center;
-            .score{
+
+            .score {
               font-size: 26rpx;
               color: $text-font-color-2;
               padding-left: 10rpx;
             }
           }
-          .tabs{
+
+          .tabs {
             display: flex;
             flex-wrap: wrap;
-            .tab{
+
+            .tab {
               border: 1px solid $brand-theme-color;
               color: $brand-theme-color;
               font-size: 22rpx;
@@ -332,7 +366,8 @@ function goBack() {
               margin: 0 10rpx 10rpx 0;
             }
           }
-          .classify{
+
+          .classify {
             color: $brand-theme-color;
           }
         }
@@ -340,17 +375,19 @@ function goBack() {
     }
   }
 
-  .scorePopup{
+  .scorePopup {
     background: #fff;
     padding: 30rpx;
     width: 70vw;
     border-radius: 30rpx;
-    .content{
+
+    .content {
       padding: 30rpx 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      .text{
+
+      .text {
         color: #ffca3e;
         font-size: 32rpx;
         padding-left: 10rpx;
@@ -359,7 +396,8 @@ function goBack() {
         text-align: right;
       }
     }
-    .footer{
+
+    .footer {
       padding: 10rpx 0;
       display: flex;
       align-items: center;

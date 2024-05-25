@@ -59,19 +59,25 @@ const classList = ref([])
 */
 // getClassList(queryParams)
 
+/**
+ * 获取分类列表网数据
+ * @param data 参数列表
+ */
 async function getClassList(data = {}) {
   let res = await apiGetClassList(data)
   // classList.value = [...classList.value, ...res.data]
   classList.value = classList.value.concat(res.data)
   /* 阻止无效的网络请求 */
-  if (
-      /*
-      当 queryParams.pageSize 被设置为一个有效的数值时，
-      判断 res.data.length 是否小于这个值。
-      当 queryParams.pageSize 为 0 或 undefined 时，
-      判断 res.data.length 是否小于 Infinity (总是为 true) */
-      res.data.length < (queryParams.pageSize || Infinity))
+  /*
+    当 queryParams.pageSize 被设置为一个有效的数值时，
+    判断 res.data.length 是否小于这个值。
+    当 queryParams.pageSize 为 0 或 undefined 时，
+    判断 res.data.length 是否小于 Infinity (总是为 true)
+  */
+  if (res.data.length < (queryParams.pageSize || Infinity))
     noData.value = true
+  /* 将数据缓存, 方便预览界面使用 */
+  uni.setStorageSync("storageClassList", classList.value)
 }
 </script>
 
