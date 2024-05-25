@@ -35,3 +35,9 @@ export function apiRating(data: UserRatingRequestData) {
         url: "/setupScore", method: "GET", data
     } as UserRatingRequest)
 }
+
+export function apiDownload(data: WallPaperDownloadRequestData) {
+    return request({
+        url: "/downloadWall", method: "GET", data
+    } as WallPaperDownloadRequest)
+}

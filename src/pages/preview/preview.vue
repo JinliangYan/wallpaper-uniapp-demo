@@ -85,7 +85,7 @@
             <view class="row">
               <view class="label">标签:</view>
               <view class="value tabs">
-                <view v-for="tab in currentItem.currentInfo.tabs" class="tab">
+                <view v-for="(tab, index) in currentItem.currentInfo.tabs" :key="index" class="tab">
                   {{ tab }}
                 </view>
               </view>
@@ -127,7 +127,7 @@
 import {computed, reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
 import {onLoad} from "@dcloudio/uni-app";
-import {apiRating} from "@/api/api";
+import {apiDownload, apiRating} from "@/api/api";
 
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
@@ -142,7 +142,7 @@ const state = reactive({
 
 const currentItem = reactive({
   currentInfo: {} as WallpaperDetailData,
-  currentId: null,
+  currentId: "",
   currentIndex: 0,
 })
 
@@ -290,13 +290,55 @@ async function clickDownload() {
   // #endif
 
   // #ifdef MP
-  let imageInfoSuccessData = await uni.getImageInfo({
-    src: currentItem.currentInfo.picurl || "",
-  })
+  try {
+    let imageInfoSuccessData = await uni.getImageInfo({
+      src: currentItem.currentInfo.picurl || "",
+    })
 
-  await uni.saveImageToPhotosAlbum({
-    filePath: imageInfoSuccessData.path
-  })
+    await uni.showLoading({
+      title: "下载中",
+      mask: true
+    })
+
+    let {classid, _id:wallId} = currentItem.currentInfo
+    let downloadRes = await apiDownload({
+      classid,
+      wallId
+    })
+
+    await uni.saveImageToPhotosAlbum({
+      filePath: imageInfoSuccessData.path
+    })
+    uni.hideLoading()
+  } catch (err) {
+    uni.hideLoading()
+    if (err.errMsg == "saveImageToPhotosAlbum:fail auth deny") {
+      let res = await uni.showModal({
+        title: "提示",
+        content: "需要授权保存到相册"
+      })
+      if (res.confirm) {
+        let setting = await uni.openSetting();
+        if (setting.authSetting['scope.writePhotosAlbum']) {
+          await uni.showToast({
+            title: "获取授权成功",
+            icon: "none"
+          })
+        } else {
+          await uni.showToast({
+            title: "获取授权失败",
+            icon: "none"
+          })
+        }
+      }
+    } else {
+      await uni.showToast({
+        title: "保存失败",
+        icon: "error"
+      })
+    }
+  }
+
   // #endif
 }
 </script>
