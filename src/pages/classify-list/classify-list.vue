@@ -64,7 +64,7 @@ const classList = ref([])
  * 获取分类列表网数据
  * @param data 参数列表
  */
-async function getClassList(data = {}) {
+async function getClassList(data: WallListRequestData) {
   let res = await apiGetClassList(data)
   // classList.value = [...classList.value, ...res.data]
   classList.value = classList.value.concat(res.data)

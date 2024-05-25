@@ -1,15 +1,7 @@
 const BASE_URL = "https://tea.qingnian8.com/api/bizhi";
 
 
-export function request(config: WallPaperRequest
-) {
-    let {
-        url,
-        method,
-        headers,
-        data
-    } = config
-
+export function request(config: WallPaperRequest) {
     /* 如果没有通过headers给定key, 则添加 */
     if (config.headers == undefined) {
         config = {
@@ -19,6 +11,12 @@ export function request(config: WallPaperRequest
             }
         }
     }
+    let {
+        url,
+        method,
+        headers,
+        data
+    } = config
 
     url = BASE_URL + url
     return new Promise((resolve, reject) => {

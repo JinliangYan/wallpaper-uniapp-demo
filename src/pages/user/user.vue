@@ -31,7 +31,7 @@
 
     <view class="section">
       <view class="list">
-        <navigator v-for="item in 2" class="row" url="../classify-list/classify-list">
+        <navigator v-for="(item, index) in 2 " :key="index" class="row" url="../classify-list/classify-list">
           <view class="left">
             <uni-icons size="20" type="download-filled"></uni-icons>
             <view class="text">我的下载</view>

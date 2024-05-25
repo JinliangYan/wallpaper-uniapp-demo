@@ -216,14 +216,14 @@ function swiperChange(e) {
  * 提交评分
  */
 async function submitScore() {
-  uni.showLoading({
+  await uni.showLoading({
     title: "加载中..."
   })
   let {classid, _id: wallId} = currentItem.currentInfo;
   let res = await apiRating({classid, wallId, userScore: state.userScore.toString()})
   uni.hideLoading();
   if (res.errCode == 0) {
-    uni.showToast({
+    await uni.showToast({
       title: "评分成功",
       icon: "none",
     })
@@ -301,7 +301,7 @@ async function clickDownload() {
     })
 
     let {classid, _id:wallId} = currentItem.currentInfo
-    let downloadRes = await apiDownload({
+    await apiDownload({
       classid,
       wallId
     })

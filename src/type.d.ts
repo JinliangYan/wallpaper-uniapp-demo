@@ -95,8 +95,8 @@ declare interface WallpaperCategoryRequestData {
     pageNum?: number;
     /** 每页的数量 */
     pageSize?: number;
-    /** 是否搜索 */
-    search?: boolean;
+    /** 是否为推荐 */
+    select?: boolean;
 }
 
 /**
@@ -364,11 +364,11 @@ declare interface UserInfoResponse extends WallPaperResponse {
  */
 declare interface NewsRequestData {
     /** 是否为推荐内容 */
-    select: boolean;
+    select?: boolean;
     /** 页码 */
-    pageNum: number;
+    pageNum?: number;
     /** 每页的数量 */
-    pageSize: number;
+    pageSize?: number;
 }
 
 /**
