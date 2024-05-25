@@ -27,7 +27,7 @@
 
         <view class="box" @click="clickScore">
           <uni-icons size="28" type="star"></uni-icons>
-          <view class="text">5分</view>
+          <view class="text">{{ currentInfo.score }}</view>
         </view>
 
         <view class="box">
@@ -51,39 +51,42 @@
           <view class="content">
             <view class="row">
               <view class="label">壁纸ID:</view>
-              <text class="value" selectable>test</text>
+              <text class="value" selectable>{{ currentInfo._id }}</text>
             </view>
 
+<!--
             <view class="row">
               <view class="label">分类:</view>
               <text class="value classify" selectable>test</text>
             </view>
+-->
 
             <view class="row">
               <view class="label">发布者:</view>
-              <text class="value" selectable>test</text>
+              <text class="value" selectable>{{ currentInfo.nickname }}</text>
             </view>
 
             <view class="row">
               <view class="label">评分:</view>
               <view class="value roteBox">
-                <uni-rate v-model="state.userScore" readonly size="16"/>
-                <text class="score">{{ state.userScore }}分</text>
+                <uni-rate readonly touchable :value="currentInfo.score" size="16"/>
+                <text class="score">{{ currentInfo.score }}分</text>
               </view>
             </view>
 
             <view class="row">
               <view class="label">摘要:</view>
               <text class="value" selectable>
-                摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分 摘要文字内容填充部分
-                摘要文字内容填充部分 摘要文字内容填充部分
+                {{ currentInfo.description }}
               </text>
             </view>
 
             <view class="row">
               <view class="label">标签:</view>
               <view class="value tabs">
-                <view v-for="item in 3" class="tab">标签{{ item }}</view>
+                <view v-for="tab in currentInfo.tabs" class="tab">
+                  {{ tab }}
+                </view>
               </view>
             </view>
           </view>
@@ -120,6 +123,7 @@
 import {reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
 import {onLoad} from "@dcloudio/uni-app";
+import {apiRating} from "@/api/api";
 
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
@@ -133,11 +137,14 @@ const state = reactive({
   readImgs: new Set<number>()
 });
 
+const currentInfo = reactive<WallpaperDetailData>(<WallpaperDetailData>{})
+
 onLoad((e: { id }) => {
   state.currentId = e.id
   state.currentIndex = state.classList.findIndex(
       (item) => item._id == state.currentId
   )
+  Object.assign(currentInfo, state.classList[state.currentIndex])
   preLoad()
 })
 
@@ -175,14 +182,25 @@ function preLoad() {
  */
 function swiperChange(e) {
   state.currentIndex = e.detail.current
+  Object.assign(currentInfo, state.classList[state.currentIndex])
   preLoad()
+  console.log(currentInfo)
 }
 
 /**
  * 提交评分
  */
-function submitScore() {
-  console.log("评分了")
+async function submitScore() {
+  // console.log("评分了")
+  let {classid, _id:wallId} = currentInfo;
+  let res = await apiRating({classid, wallId, userScore: state.userScore.toString()})
+  if (res.errCode == 0) {
+    uni.showToast({
+      title: "评分成功",
+      icon: "none",
+    })
+    clickScoreClose()
+  }
 }
 
 /**
@@ -197,6 +215,7 @@ function clickScore() {
  */
 function clickScoreClose() {
   scorePopup.value.close()
+  state.userScore = 0
 }
 
 /**

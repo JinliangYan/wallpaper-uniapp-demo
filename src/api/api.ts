@@ -29,3 +29,9 @@ export function apiGetClassList(data: WallListRequestData) {
         url: "/wallList", method: "GET", data
     } as WallListRequest)
 }
+
+export function apiRating(data: UserRatingRequestData) {
+    return request({
+        url: "/setupScore", method: "GET", data
+    } as UserRatingRequest)
+}
