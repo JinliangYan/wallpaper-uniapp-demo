@@ -31,7 +31,7 @@
           <view class="text">{{ currentItem.currentInfo.score }}分</view>
         </view>
 
-        <view class="box">
+        <view class="box" @click="clickDownload">
           <uni-icons size="28" type="download"></uni-icons>
           <view class="text">下载</view>
         </view>
@@ -275,6 +275,29 @@ function maskChange() {
  */
 function goBack() {
   uni.navigateBack()
+}
+
+/**
+ * 点击下载
+ */
+async function clickDownload() {
+  // #ifdef H5
+  await uni.showModal({
+        content: "请长按保存壁纸",
+        showCancel: false
+      }
+  )
+  // #endif
+
+  // #ifdef MP
+  let imageInfoSuccessData = await uni.getImageInfo({
+    src: currentItem.currentInfo.picurl || "",
+  })
+
+  await uni.saveImageToPhotosAlbum({
+    filePath: imageInfoSuccessData.path
+  })
+  // #endif
 }
 </script>
 

@@ -165,6 +165,8 @@ declare interface WallpaperDetailData extends WallPaperData {
     classid: string;
     /** 小图URL */
     smallPicurl: string;
+    /** 大图URL */
+    picurl?: string;
     /** 标签数组 */
     tabs: string[];
     /** 评分 */
