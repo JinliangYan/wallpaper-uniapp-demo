@@ -2,8 +2,9 @@
   <view class="preview">
     <!--suppress TypeScriptValidateTypes -->
     <swiper :current="state.currentIndex" circular @change="swiperChange">
-      <swiper-item v-for="item in state.classList" :key="item._id">
-        <image :src="item.picurl" mode="aspectFill" @click="maskChange"></image>
+      <!--      减少网络消耗-->
+      <swiper-item v-for="(item, index) in state.classList" :key="item._id">
+        <image v-if="state.readImgs.has(index)" :src="item.picurl" mode="aspectFill" @click="maskChange"></image>
       </swiper-item>
     </swiper>
 
@@ -129,6 +130,7 @@ const state = reactive({
   classList: [],
   currentId: null,
   currentIndex: 0,
+  readImgs: new Set<number>()
 });
 
 onLoad((e: { id }) => {
@@ -136,6 +138,7 @@ onLoad((e: { id }) => {
   state.currentIndex = state.classList.findIndex(
       (item) => item._id == state.currentId
   )
+  preLoad()
 })
 
 
@@ -151,8 +154,28 @@ state.classList = storageClassList.map(item => {
   }
 })
 
+/**
+ * 图片预加载, 使用户查看图片详情更丝滑
+ */
+function preLoad() {
+  const previousIndex = state.currentIndex <= 0 ? state.classList.length - 1 : state.currentIndex - 1;
+  const nextIndex = state.currentIndex >= state.classList.length - 1 ? 0 : state.currentIndex + 1;
+
+  // 使用 Set 来确保索引的唯一性
+  state.readImgs.add(previousIndex);
+  state.readImgs.add(state.currentIndex);
+  state.readImgs.add(nextIndex);
+}
+
+
+/**
+ * Swiper 滑动事件
+ * 将页面显示的 index 改为当前的实际 index
+ * @param e
+ */
 function swiperChange(e) {
   state.currentIndex = e.detail.current
+  preLoad()
 }
 
 /**
