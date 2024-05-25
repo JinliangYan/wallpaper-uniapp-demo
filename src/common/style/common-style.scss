@@ -1,24 +1,31 @@
 /* 公用样式 */
-view, swiper, swiper-item{
+view, swiper, swiper-item {
   box-sizing: border-box;
 }
 
-.pageBg{
+.pageBg {
   /* 渐变背景 */
-  background:
-          /*
+  background: /*
           这是一个从上到下的线性渐变。
           to bottom: 渐变方向从上到下。
           transparent: 渐变的起点颜色为透明。
           white 400rpx: 渐变的终点颜色为白色，并且在400rpx处完全变为白色。
           */
           linear-gradient(to bottom, transparent, white 400rpx),
-          /*
-          这是一个从左到右的线性渐变。
-          to right: 渐变方向从左到右。
-          #beecd8 20%: 渐变起点颜色为#beecd8，并在20%位置开始渐变。
-          #f4e2d8: 渐变终点颜色为#f4e2d8。
-          */
+            /*
+            这是一个从左到右的线性渐变。
+            to right: 渐变方向从左到右。
+            #beecd8 20%: 渐变起点颜色为#beecd8，并在20%位置开始渐变。
+            #f4e2d8: 渐变终点颜色为#f4e2d8。
+            */
           linear-gradient(to right, #beecd8 20%, #f4e2d8);
   min-height: 80vh;
+}
+
+.loadingLayout {
+  padding: 30rpx;
+}
+
+.safe-area-inset-bottom {
+  height: env(safe-area-inset-bottom);
 }
