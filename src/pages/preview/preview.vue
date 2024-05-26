@@ -92,6 +92,8 @@
             </view>
           </view>
         </scroll-view>
+        <!--        安全区域-->
+        <view class="safe-area-inset-bottom"></view>
       </view>
     </uni-popup>
 
