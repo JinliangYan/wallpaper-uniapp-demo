@@ -4,10 +4,10 @@
       <view :style="{height: getStatusBarHeight() + 'px'}" class="statusBar"></view> <!--空白盒子, 设置为状态栏高度-->
       <view :style="{height: getTitleBarHeight() + 'px'}" class="titleBar">
         <view class="title">{{ title }}</view>
-        <view class="search">
+        <navigator class="search" url="../../pages/search/search">
           <uni-icons class="icon" color="#888" size="18" type="search"></uni-icons>
           <text class="text">搜索</text>
-        </view>
+        </navigator>
       </view>
     </view>
 
