@@ -15,7 +15,7 @@
     <view class="section">
       <view class="list">
         <!--        我的下载-->
-        <view class="row">
+        <view class="row" @click="goToMyDownloadList">
           <view class="left">
             <uni-icons size="20" type="download-filled"></uni-icons>
             <view class="text">我的下载</view>
@@ -26,7 +26,7 @@
           </view>
         </view>
         <!--        我的评分-->
-        <view class="row">
+        <view class="row" @click="goToMyScoreList">
           <view class="left">
             <uni-icons size="20" type="star-filled"></uni-icons>
             <view class="text">我的评分</view>
@@ -93,6 +93,18 @@ function clickContact() {
 async function getUserInfo() {
   let res = await apiGetUserInfo();
   Object.assign(userInfo, res.data)
+}
+
+function goToMyDownloadList() {
+  uni.navigateTo({
+    url: "../classify-list/classify-list?name=我的下载&type=download",
+  })
+}
+
+function goToMyScoreList() {
+  uni.navigateTo({
+    url: "../classify-list/classify-list?name=我的评分&type=score",
+  })
 }
 </script>
 

@@ -53,3 +53,10 @@ export function apiGetUserInfo() {
         url: "/userInfo", method: "GET"
     } as UserInfoDataRequest)
 }
+
+
+export function apiGetUserDownloadOrScoreList(data:WallPaperUserWallListRequestData)  {
+    return request({
+        url: "/userWallList", method: "GET", data: data
+    } as WallPaperUserWallListRequest)
+}

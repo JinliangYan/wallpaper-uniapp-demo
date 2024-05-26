@@ -27,20 +27,26 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
-import {onLoad, onReachBottom, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
-import {apiGetClassList} from "@/api/api";
+import {onLoad, onPullDownRefresh, onReachBottom, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
+import {apiGetClassList, apiGetUserDownloadOrScoreList} from "@/api/api";
 import {gotoHome} from "@/utils/common";
 
-const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?: number } = {}
+const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?: number, type: "score" | "download" }
+    = {}
 /* 用于阻止无效的网络请求 */
 const noData = ref(false)
 
 onLoad((e) => {
-  let {id = null, name = "分类列表"} = e
-  if (!id) {
-    gotoHome()
+  let {id = null, name = "分类列表", type = null} = e
+  if (type) {
+    queryParams.type = type
+  } else if (id) {
+    queryParams.classid = id
+  } else {
+    /* 错误参数, 返回到首页 */
+    gotoHome();
   }
-  queryParams.classid = id
+
   queryParams.name = name
   queryParams.pageNum = 1
   queryParams.pageSize = 12
@@ -57,6 +63,21 @@ onReachBottom(() => {
   getClassList(queryParams)
 })
 
+onPullDownRefresh(async () => {
+  try {
+    queryParams.pageNum = 1
+    classList.value = []
+    await getClassList(queryParams)
+  } catch (err) {
+    await uni.showToast({
+      icon: "error",
+      title: "出错了"
+    })
+  } finally {
+    uni.stopPullDownRefresh()
+  }
+})
+
 const classList = ref([])
 /*
   这里 queryParams 为空,
@@ -68,10 +89,27 @@ const classList = ref([])
  * 获取分类列表网数据
  * @param data 参数列表
  */
-async function getClassList(data: WallListRequestData) {
-  let res = await apiGetClassList(data)
-  // classList.value = [...classList.value, ...res.data]
-  classList.value = classList.value.concat(res.data)
+async function getClassList(data) {
+  /* 判断是分类列表还是用户历史点赞/下载列表 */
+  let res;
+  if (queryParams.classid) {
+    res = await apiGetClassList(data)
+    // console.log(queryParams.classid, "进入分类")
+  }
+  if (queryParams.type) {
+
+    res = await apiGetUserDownloadOrScoreList(data)
+    console.log(res)
+    // console.log(queryParams.type, "进入" + queryParams.type)
+  }
+
+
+  // Ensure res.data is an array
+  const dataArray = Array.isArray(res.data) ? res.data : [res.data];
+
+  // Update classList
+  classList.value = classList.value.concat(dataArray)
+
   /* 阻止无效的网络请求 */
   /*
     当 queryParams.pageSize 被设置为一个有效的数值时，
@@ -79,8 +117,10 @@ async function getClassList(data: WallListRequestData) {
     当 queryParams.pageSize 为 0 或 undefined 时，
     判断 res.data.length 是否小于 Infinity (总是为 true)
   */
-  if (res.data.length < (queryParams.pageSize || Infinity))
+  if (dataArray.length < (queryParams.pageSize || Infinity)) {
     noData.value = true
+  }
+
   /* 将数据缓存, 方便预览界面使用 */
   uni.setStorageSync("storageClassList", classList.value)
 }

@@ -329,10 +329,6 @@ async function clickDownload() {
     })
 
     let {classid, _id: wallId} = currentItem.currentInfo
-    await apiDownload({
-      classid,
-      wallId
-    })
 
     await uni.saveImageToPhotosAlbum({
       filePath: imageInfoSuccessData.path
@@ -341,6 +337,11 @@ async function clickDownload() {
     await uni.showToast({
       title: "保存成功",
       icon: "none"
+    })
+
+    await apiDownload({
+      classid,
+      wallId
     })
   } catch (err) {
     uni.hideLoading()

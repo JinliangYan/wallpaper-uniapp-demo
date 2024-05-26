@@ -38,7 +38,8 @@ interface WallPaperResponse {
     /** 请求耗时 */
     timeCost: number;
     /** 可选的响应数据 */
-    data?: WallPaperData;
+    data?: WallPaperData | WallPaperData[];
+    // data?: WallPaperData[];
 }
 
 /**
@@ -313,6 +314,30 @@ declare interface WallPaperDownloadData extends WallPaperData {
 declare interface WallPaperDownloadResponse extends WallPaperResponse {
     /** 壁纸下载数据 */
     data: WallPaperDownloadData;
+}
+
+/**
+ * 我的评分/下载列表请求的参数类型
+ */
+declare interface WallPaperUserWallListRequestData {
+    /** 请求的类型 */
+    type: "score" | "download";
+    /** 页码 */
+    pageNum?: number;
+    /** 每页的数量 */
+    pageSize?: number;
+}
+
+/**
+ * 我的评分/下载列表请求类型
+ */
+declare interface WallPaperUserWallListRequest extends WallPaperRequest {
+    /** 请求的URL */
+    url: "/userWallList"
+    /** 请求的方法 */
+    method: "GET";
+    /** 请求的数据 */
+    data: WallPaperUserWallListRequestData;
 }
 
 /**
