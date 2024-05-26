@@ -57,13 +57,22 @@
 
     <view class="section">
       <view class="list">
-        <navigator v-for="(item, index) in 2 " :key="index" class="row" url="../classify-list/classify-list">
+        <navigator class="row" url="../notice/detail?id=653507c6466d417a3718e94b">
           <view class="left">
             <uni-icons size="20" type="download-filled"></uni-icons>
-            <view class="text">我的下载</view>
+            <view class="text">订阅更新</view>
           </view>
           <view class="right">
-            <view class="text">33</view>
+            <uni-icons color="#aaa" size="15" type="right"></uni-icons>
+          </view>
+        </navigator>
+
+        <navigator class="row" url="../notice/detail?id=6536358ce0ec19c8d67fbe82">
+          <view class="left">
+            <uni-icons size="20" type="flag-filled"></uni-icons>
+            <view class="text">常见问题</view>
+          </view>
+          <view class="right">
             <uni-icons color="#aaa" size="15" type="right"></uni-icons>
           </view>
         </navigator>

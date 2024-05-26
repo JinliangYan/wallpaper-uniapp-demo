@@ -60,3 +60,9 @@ export function apiGetUserDownloadOrScoreList(data:WallPaperUserWallListRequestD
         url: "/userWallList", method: "GET", data: data
     } as WallPaperUserWallListRequest)
 }
+
+export function apiGetNoticeDetail(data:NewsDetailRequestData)  {
+    return request({
+        data: data, method: "GET", url: "/wallNewsDetail"
+    } as NewsDetailRequest)
+}

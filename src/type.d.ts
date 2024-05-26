@@ -412,7 +412,7 @@ declare interface NewsRequest extends WallPaperRequest {
 /**
  * 壁纸资讯公告列表数据接口类型
  */
-declare interface NewsData extends WallPaperData {
+declare interface NewsListData extends WallPaperData {
     /** 浏览数量 */
     view_count: number;
     /** 发布时间 */
@@ -430,7 +430,7 @@ declare interface NewsData extends WallPaperData {
  */
 declare interface NewsResponse extends WallPaperResponse {
     /** 壁纸资讯公告列表数据 */
-    data: NewsData[];
+    data: NewsListData[];
 }
 
 /**
@@ -456,9 +456,11 @@ declare interface NewsDetailRequest extends WallPaperRequest {
 /**
  * 壁纸资讯公告详情数据接口类型
  */
-declare interface NewsDetailData extends NewsData {
-    /** 文章状态 */
+declare interface NewsDetailData extends NewsListData {
+    /** 文章状态 `0` 草稿, `1` 发布*/
     article_status: 0 | 1;
+    /** 文章内容 */
+    content: string;
 }
 
 /**
