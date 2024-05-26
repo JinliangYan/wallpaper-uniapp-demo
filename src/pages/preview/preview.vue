@@ -130,6 +130,7 @@ import {computed, reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
 import {onLoad, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
 import {apiDetailWall, apiDownload, apiRating} from "@/api/api";
+import {gotoHome} from "@/utils/common";
 
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
@@ -168,6 +169,10 @@ const userScore = computed({
 
 
 onLoad(async (onLoad: { type, id }) => {
+  if (!onLoad.id) {
+    await gotoHome()
+  }
+
   currentItem.currentId = onLoad.id
   /* 如果使用户从分享页面进入, 用户是没有缓存信息的, 这里从服务器获取信息 */
   if (onLoad.type == "share") {

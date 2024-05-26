@@ -45,10 +45,9 @@
       </common-title>
       <view class="content">
         <scroll-view scroll-x>
-          <view v-for="item in randomList" :key="item._id" class="box">
-            <navigator url="../preview/preview">
-              <image :src="item.smallPicurl"></image>
-            </navigator>
+          <view class="box" v-for="item in randomList" :key="item._id"
+                @click="goPreview(item._id)">
+            <image :src="item.smallPicurl"></image>
           </view>
         </scroll-view>
       </view>
@@ -110,6 +109,13 @@ async function getClassify() {
     select: true
   })
   classifyList.value = res.data
+}
+
+function goPreview(id) {
+  uni.navigateTo({
+    url: "/pages/preview/preview?id=" + id,
+  })
+  uni.setStorageSync("storageClassList", randomList.value)
 }
 
 /**
@@ -262,15 +268,10 @@ onShareTimeline(() => {
           display: inline-block;
           margin-right: 15rpx;
 
-          navigator {
+          image {
             width: 100%;
             height: 100%;
-
-            image {
-              width: 100%;
-              height: 100%;
-              border-radius: 10rpx;
-            }
+            border-radius: 10rpx;
           }
         }
 

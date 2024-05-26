@@ -26,3 +26,20 @@ export function timeDiffDisplay(inputTime: number) {
         return "超过3个月";
     }
 }
+
+export async function gotoHome() {
+    try {
+        let res = await uni.showModal({
+            title: "提示",
+            content: "页面有误, 即将返回首页",
+            showCancel: false,
+        })
+        if (res.confirm) {
+            await uni.reLaunch({
+                url: "/pages/index/index"
+            })
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}

@@ -29,6 +29,7 @@
 import {ref} from "vue";
 import {onLoad, onReachBottom, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
 import {apiGetClassList} from "@/api/api";
+import {gotoHome} from "@/utils/common";
 
 const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?: number } = {}
 /* 用于阻止无效的网络请求 */
@@ -36,6 +37,9 @@ const noData = ref(false)
 
 onLoad((e) => {
   let {id = null, name = "分类列表"} = e
+  if (!id) {
+    gotoHome()
+  }
   queryParams.classid = id
   queryParams.name = name
   queryParams.pageNum = 1
