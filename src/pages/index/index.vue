@@ -76,6 +76,7 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import {apiGetBanner, apiGetClassify, apiGetDayRandom, apiGetNotice} from "@/api/api";
+import {onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
 
 getBanner();
 getDayRandom()
@@ -110,6 +111,28 @@ async function getClassify() {
   })
   classifyList.value = res.data
 }
+
+/**
+ * 分享给好友
+ */
+onShareAppMessage((e) => {
+  return {
+    title: "丁丁壁纸",
+    path: "pages/index/index"
+  }
+})
+
+/**
+ * 分享到朋友圈
+ */
+onShareTimeline(() => {
+  return {
+    title: "丁丁壁纸",
+    // imageUrl: "https://cdn-icons-png.freepik.com/256/6364/6364002.png?semt=ais_hybrid"
+    // path: "pages/index/index"
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

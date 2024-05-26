@@ -1,5 +1,5 @@
 <template>
-  <view class="preview">
+  <view class="preview" v-if="currentItem.currentInfo != {}">
     <!--suppress TypeScriptValidateTypes -->
     <swiper :current="currentItem.currentIndex" circular @change="swiperChange">
       <!--      减少网络消耗-->
@@ -126,8 +126,8 @@
 <script lang="ts" setup>
 import {computed, reactive, ref} from "vue";
 import {getStatusBarHeight} from "@/utils/system";
-import {onLoad} from "@dcloudio/uni-app";
-import {apiDownload, apiRating} from "@/api/api";
+import {onLoad, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
+import {apiDetailWall, apiDownload, apiRating} from "@/api/api";
 
 const infoPopup = ref() /* 必须与标签上的ref名保持一致 */
 const scorePopup = ref() /* 必须与标签上的ref名保持一致 */
@@ -165,8 +165,21 @@ const userScore = computed({
 });
 
 
-onLoad((onLoad: { id }) => {
+onLoad(async (onLoad: { type, id }) => {
   currentItem.currentId = onLoad.id
+  /* 如果使用户从分享页面进入, 用户是没有缓存信息的, 这里从服务器获取信息 */
+  if (onLoad.type == "share") {
+    let res = await apiDetailWall({id: currentItem.currentId})
+    state.classList = res.data.map((item) => {
+      return {
+        /* 展开item */
+        ...item,
+        /* 追加picurl属性 (大图url) */
+        picurl: item.smallPicurl.replace("_small.webp", ".jpg"),
+      }
+    })
+  }
+
   currentItem.currentIndex = state.classList.findIndex(
       (item) => item._id == currentItem.currentId
   )
@@ -273,9 +286,17 @@ function maskChange() {
 /**
  * 返回上一页
  */
-function goBack() {
-  uni.navigateBack()
+async function goBack() {
+  try {
+    await uni.navigateBack();
+  } catch (error) {
+    /* 回退失败返回主页, 解决分享页面进入返回无效问题 */
+    await uni.reLaunch({
+      url: "/pages/index/index"
+    });
+  }
 }
+
 
 /**
  * 点击下载
@@ -300,7 +321,7 @@ async function clickDownload() {
       mask: true
     })
 
-    let {classid, _id:wallId} = currentItem.currentInfo
+    let {classid, _id: wallId} = currentItem.currentInfo
     await apiDownload({
       classid,
       wallId
@@ -310,6 +331,10 @@ async function clickDownload() {
       filePath: imageInfoSuccessData.path
     })
     uni.hideLoading()
+    await uni.showToast({
+      title: "保存成功",
+      icon: "none"
+    })
   } catch (err) {
     uni.hideLoading()
     if (err.errMsg == "saveImageToPhotosAlbum:fail auth deny") {
@@ -341,6 +366,28 @@ async function clickDownload() {
 
   // #endif
 }
+
+/**
+ * 分享给好友
+ */
+onShareAppMessage((e) => {
+  return {
+    title: "丁丁壁纸",
+    path: `pages/preview/preview?id=${currentItem.currentId}&type=share`
+  }
+})
+
+/**
+ * 分享到朋友圈
+ */
+onShareTimeline(() => {
+  return {
+    title: "丁丁壁纸",
+    query: `id=${currentItem.currentId}&type=share`
+    // imageUrl: "https://cdn-icons-png.freepik.com/256/6364/6364002.png?semt=ais_hybrid"
+    // path: "pages/index/index"
+  }
+})
 </script>
 
 

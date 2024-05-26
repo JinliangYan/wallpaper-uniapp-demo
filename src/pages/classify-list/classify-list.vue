@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
-import {onLoad, onReachBottom} from "@dcloudio/uni-app";
+import {onLoad, onReachBottom, onShareAppMessage, onShareTimeline} from "@dcloudio/uni-app";
 import {apiGetClassList} from "@/api/api";
 
 const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?: number } = {}
@@ -35,7 +35,7 @@ const queryParams: { classid: string, name?: string, pageNum?: number, pageSize?
 const noData = ref(false)
 
 onLoad((e) => {
-  let {id = null, name = null} = e
+  let {id = null, name = "分类列表"} = e
   queryParams.classid = id
   queryParams.name = name
   queryParams.pageNum = 1
@@ -80,6 +80,26 @@ async function getClassList(data: WallListRequestData) {
   /* 将数据缓存, 方便预览界面使用 */
   uni.setStorageSync("storageClassList", classList.value)
 }
+
+/**
+ * 分享给好友
+ */
+onShareAppMessage((e) => {
+  return {
+    title: "丁丁壁纸" + queryParams.name,
+    path: `pages/classify-list/classify-list?id=${queryParams.classid}&name=${queryParams.name}`,
+  }
+})
+
+/**
+ * 分享到朋友圈
+ */
+onShareTimeline(() => {
+  return {
+    title: "丁丁壁纸" + queryParams.name,
+    query: `id=${queryParams.classid}&name=${queryParams.name}`
+  }
+})
 </script>
 
 

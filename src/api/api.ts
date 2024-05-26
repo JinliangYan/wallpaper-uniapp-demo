@@ -41,3 +41,9 @@ export function apiDownload(data: WallPaperDownloadRequestData) {
         url: "/downloadWall", method: "GET", data
     } as WallPaperDownloadRequest)
 }
+
+export function apiDetailWall(data: WallpaperDetailRequestData) {
+    return request({
+        url: "/detailWall", method: "GET", data
+    } as WallpaperDetailRequest)
+}
