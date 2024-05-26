@@ -47,3 +47,9 @@ export function apiDetailWall(data: WallpaperDetailRequestData) {
         url: "/detailWall", method: "GET", data
     } as WallpaperDetailRequest)
 }
+
+export function apiGetUserInfo() {
+    return request({
+        url: "/userInfo", method: "GET"
+    } as UserInfoDataRequest)
+}

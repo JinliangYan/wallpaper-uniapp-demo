@@ -319,18 +319,19 @@ declare interface WallPaperDownloadResponse extends WallPaperResponse {
  * 地址信息接口类型
  */
 interface Address {
-    /** 地址 */
-    address: string;
+    /** 国家 */
+    country: string;
     /** 省份 */
     province: string;
     /** 城市 */
     city: string;
 }
 
+
 /**
  * 户个人信息请求类型
  */
-declare interface WallPaperDownloadRequest extends WallPaperRequest {
+declare interface UserInfoDataRequest extends WallPaperRequest {
     /** 请求的URL */
     url: "/userInfo";
     /** 请求的方法 */

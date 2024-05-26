@@ -19,7 +19,7 @@ export function request(config: WallPaperRequest) {
     } = config
 
     url = BASE_URL + url
-    return new Promise((resolve, reject) => {
+    return new Promise<WallPaperResponse>((resolve, reject) => {
         uni.request({
             url,
             method,

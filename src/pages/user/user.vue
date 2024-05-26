@@ -1,22 +1,48 @@
 <template>
   <view class="userLayout pageBg">
+    <view :style="{height: getNavBarHeight() + 'px'}"></view>
     <view class="userInfo">
       <view class="avatar">
         <image mode="aspectFill" src="../../static/images/xxmLogo.png"></image>
       </view>
-      <view class="ip">100.100.100.100</view>
-      <view class="address">来自于: 山东</view>
+      <view class="ip">{{ userInfo.IP }}</view>
+      <!--      这里使用了可选链操作符?.来确保在address存在时才去访问其属性-->
+      <view class="address">来自于:
+        {{ userInfo.address?.city || userInfo.address?.province || userInfo.address?.country }}
+      </view>
     </view>
 
     <view class="section">
       <view class="list">
+        <!--        我的下载-->
+        <view class="row">
+          <view class="left">
+            <uni-icons size="20" type="download-filled"></uni-icons>
+            <view class="text">我的下载</view>
+          </view>
+          <view class="right">
+            <view class="text">{{ userInfo.downloadSize }}</view>
+            <uni-icons color="#aaa" size="15" type="right"></uni-icons>
+          </view>
+        </view>
+        <!--        我的评分-->
+        <view class="row">
+          <view class="left">
+            <uni-icons size="20" type="star-filled"></uni-icons>
+            <view class="text">我的评分</view>
+          </view>
+          <view class="right">
+            <view class="text">{{ userInfo.scoreSize }}</view>
+            <uni-icons color="#aaa" size="15" type="right"></uni-icons>
+          </view>
+        </view>
+        <!--        联系客服-->
         <view class="row">
           <view class="left">
             <uni-icons size="20" type="contact"></uni-icons>
             <view class="text">联系客服</view>
           </view>
           <view class="right">
-            <view class="text">33</view>
             <uni-icons color="#aaa" size="15" type="right"></uni-icons>
           </view>
           <!-- #ifdef MP -->
@@ -48,10 +74,25 @@
 
 <script lang="ts" setup>
 
+import {getNavBarHeight} from "@/utils/system";
+import {apiGetUserInfo} from "@/api/api";
+import {reactive} from "vue";
+
+uni.showLoading()
+getUserInfo()
+uni.hideLoading()
+
+const userInfo = reactive({} as UserInfoData)
+
 function clickContact() {
   uni.makePhoneCall({
     phoneNumber: '19070484090'
   })
+}
+
+async function getUserInfo() {
+  let res = await apiGetUserInfo();
+  Object.assign(userInfo, res.data)
 }
 </script>
 
