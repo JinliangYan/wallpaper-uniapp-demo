@@ -66,3 +66,9 @@ export function apiGetNoticeDetail(data:NewsDetailRequestData)  {
         data: data, method: "GET", url: "/wallNewsDetail"
     } as NewsDetailRequest)
 }
+
+export function apiSearch(data:WallPaperSearchRequestData) {
+    return request({
+        data: data, method: "GET", url: "/searchWall"
+    } as WallPaperSearchRequest)
+}
