@@ -6,7 +6,7 @@
       <swiper autoplay circular
               indicator-active-color="#fff" indicator-color="rgba(255,255,255,0.5)" indicator-dots>
         <swiper-item v-for="item in bannerList" :key="item._id">
-          <image :src="item.picurl" mode="aspectFill"></image>
+          <image :src="item.picurl" mode="aspectFill" @click="navigatorToOtherPage(item.url, item.target, item.appid)"></image>
         </swiper-item>
       </swiper>
     </view>
@@ -58,7 +58,7 @@
       <common-title>
         <template #name>专题精选</template>
         <template #custom>
-          <navigator class="more" url="">More+</navigator>
+          <navigator class="more" url="../classify/classify" open-type="reLaunch">More+</navigator>
         </template>
       </common-title>
 
@@ -139,6 +139,19 @@ onShareTimeline(() => {
     // path: "pages/index/index"
   }
 })
+
+function navigatorToOtherPage(url: string, target: string, appid?: string) {
+  if (target == "miniProgram" && appid) {
+      uni.navigateToMiniProgram({
+      appId: appid,
+      path: url
+    })
+  } else {
+    uni.navigateTo({
+      url: `/pages/classify-list/classify-list?${url}`
+    })
+  }
+}
 
 </script>
 
