@@ -90,8 +90,7 @@ const onSearch = async () => {
   })
   classList.value = []
   queryParams.value.pageNum = 1
-  historySearch.value = [...new Set(historySearch.value.concat(queryParams.value.keyword))];
-  uni.setStorageSync("historySearch", historySearch.value);
+  updateHistory(queryParams.value.keyword); // 更新搜索历史
   noSearch.value = await searchData()
   console.log("test", noSearch.value)
   uni.hideLoading()
@@ -156,6 +155,21 @@ function init() {
   classList.value = []
   queryParams.value = {
     keyword: "", pageNum: 1, pageSize: 12
+  }
+}
+
+// 搜索历史并确保不超过10个记录，最近的搜索排在前面
+function updateHistory(keyword: string) {
+  if (keyword) {
+    // 移除已有的相同关键字
+    historySearch.value = historySearch.value.filter((item: string) => item !== keyword);
+    // 将新的关键字插入到最前面
+    historySearch.value.unshift(keyword);
+    // 如果记录超过10个，只保留前10个记录
+    if (historySearch.value.length > 10) {
+      historySearch.value = historySearch.value.slice(0, 10);
+    }
+    uni.setStorageSync("historySearch", historySearch.value);
   }
 }
 
